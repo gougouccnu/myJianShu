@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="发现"
+        android:gravity="center"
+        android:drawableTop="@drawable/selector_icon_faxian"
+        android:id="@+id/tvFaXian" />
+
+    <TextView
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="关注"
+        android:gravity="center"
+        android:drawableTop="@drawable/selector_icon_guanzhu"
+        android:id="@+id/tvGuanZhu" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgWrite" />
+
+    <TextView
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="消息"
+        android:gravity="center"
+        android:drawableTop="@drawable/selector_icon_xiaoxi"
+        android:id="@+id/tvXiaoXi" />
+
+    <TextView
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="我的"
+        android:gravity="center"
+        android:drawableTop="@drawable/selector_icon_wode"
+        android:id="@+id/tvWoDe" />
+</LinearLayout>

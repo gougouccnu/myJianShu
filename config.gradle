@@ -1,0 +1,30 @@
+ext {
+
+    android = [compileSdkVersion: 23,
+               buildToolsVersion: "23.0.1",
+               applicationId    : "com.hankkin.compustrading",
+               minSdkVersion    : 14,
+               targetSdkVersion : 23,
+               versionCode      : 2,
+               versionName      : "1.0.1"]
+
+    dependencies = ["support-v4"               : 'com.android.support:support-v4:23.0.1',
+                    "appcompat-v7"             : 'com.android.support:appcompat-v7:23.0.1',
+                    "design"                   : 'com.android.support:design:23.0.1',
+                    "cardview-v7"              : 'com.android.support:cardview-v7:23.1.1',
+                    "recyclerview-v7"          : 'com.android.support:recyclerview-v7:23.1.1',
+                    "multidex"                 : "com.android.support:multidex:1.0.+",
+                    "butterknife"              : 'com.jakewharton:butterknife:7.0.1',
+                    "volley"                   : 'com.mcxiaoke.volley:library:1.0.19',
+                    "okhttp"                   : 'com.squareup.okhttp:okhttp:2.7.0',
+                    "okhttp-urlconnection"     : 'com.squareup.okhttp:okhttp-urlconnection:2.7.0',
+                    "leakcanary"               : 'com.squareup.leakcanary:leakcanary-android:1.3.1',
+                    "glide"                    : 'com.github.bumptech.glide:glide:3.6.1',
+                    "glide-okhttp-integration" : 'com.github.bumptech.glide:okhttp-integration:1.3.1',
+                    "foldable-layout"          : 'com.alexvasilkov:foldable-layout:1.0.1',
+                    "etsy-grid"                : 'com.etsy.android.grid:library:1.0.5',
+                    "PagerSlidingTabStrip"     : 'com.astuetz:pagerslidingtabstrip:1.0.1',
+                    "betterspinner"            : 'com.weiwangcn.betterspinner:library:1.1.0',
+                    "floatingactionbutton"     : 'com.getbase:floatingactionbutton:1.10.1',
+                    "gson"                     : 'com.google.code.gson:gson:2.6.2']
+}
