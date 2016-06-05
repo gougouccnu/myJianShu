@@ -33,4 +33,8 @@ public class CategoryFragmentAdaptor extends FragmentPagerAdapter {
     public int getCount() {
         return mCategoryList.size();
     }
+
+    public String getPageTitle(int i) {
+        return mCategoryList.get(i).getName();
+    }
 }

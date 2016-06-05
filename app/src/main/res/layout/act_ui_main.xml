@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +7,10 @@
     android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
-    <include layout="@layout/act_ui_topbar"/>
+    <include layout="@layout/act_ui_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs_main"
         android:layout_width="match_parent"
@@ -15,10 +18,14 @@
 
     <android.support.v4.view.ViewPager
         android:layout_marginTop="8dp"
-        android:id="@+id/pager"
+        android:id="@+id/pager_pgMain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabs_main" />
 
-    <include layout="@layout/act_ui_bottmbar" />
+    <include android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/act_ui_bottmbar"
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+</RelativeLayout>
