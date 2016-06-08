@@ -12,6 +12,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.adapter.CategoryFragmentAdaptor;
 import com.ggccnu.myjianshu.fragment.CateDetailFragment;
+import com.ggccnu.myjianshu.fragment.ChildCateFragment;
 import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.mode.Category;
 import com.ggccnu.myjianshu.mode.Person;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 选项fragment界面
      */
-    private ArrayList<CateDetailFragment> mCateDetailFragmentList = new ArrayList<>();
+    private ArrayList<android.support.v4.app.Fragment> mCateDetailFragmentList   = new ArrayList<>();
 
     /**
      * 分类数组
@@ -104,15 +105,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == UPDATE_VIEWPAGE) {
-                    for (int i = 0; i < mCategoryList.size(); i++) {
+                    // 添加子frag
+                    ChildCateFragment mChildCateFragment = new ChildCateFragment();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("cid", mCategoryList.get(0).getId());
+                    mBundle.putSerializable("articles", (Serializable) msg.obj);
+                    mChildCateFragment.setArguments(mBundle);
+                    mCateDetailFragmentList.add(mChildCateFragment);
+
+                    for (int i = 1; i < mCategoryList.size(); i++) {
                         CateDetailFragment mCateDetailFragment = new CateDetailFragment();
-                        Bundle mBundle = new Bundle();
-                        mBundle.putInt("cid", mCategoryList.get(i).getId());
-                        mBundle.putSerializable("articles", (Serializable) msg.obj);
-                        mCateDetailFragment.setArguments(mBundle);
+                        Bundle mBundle2 = new Bundle();
+                        mBundle2.putInt("cid", mCategoryList.get(i).getId());
+                        mBundle2.putSerializable("articles", (Serializable) msg.obj);
+                        mCateDetailFragment.setArguments(mBundle2);
                         mCateDetailFragmentList.add(mCateDetailFragment);
                     }
                 }
+
+                //ChildCateFragment mChildCateFragment = new ChildCateFragment();
+                //mCateDetailFragmentList.add(mChildCateFragment);
                 // Initialize the ViewPager and set an adapter
                 mPager = (ViewPager) findViewById(R.id.pager_pgMain);
                 mPagerTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs_main);
@@ -142,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     msg.obj = mArticleList;
                     mHandler.sendMessage(msg);
                 }
+                Log.d("MainActivity", "queryArticles onSuccess");
             }
 
             @Override
@@ -165,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     mCategoryList.addAll(list);
                     queryArticles();
                 }
+                Log.d("MainActivity", "queryCategory onSuccess");
             }
 
             @Override
