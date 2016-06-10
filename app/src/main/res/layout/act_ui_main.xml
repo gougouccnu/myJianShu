@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
@@ -13,8 +13,12 @@
         android:layout_alignParentTop="true" />
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs_main"
-        android:layout_width="match_parent"
-        android:layout_height="48dip" />
+        android:layout_width="wrap_content"
+        android:layout_height="48dip"
+        custom:pstsIndicatorHeight="4dip"
+        custom:pstsIndicatorColor="@color/colorAccent"
+        custom:pstsShouldExpand="true"
+        android:layout_centerHorizontal="true" />
 
     <android.support.v4.view.ViewPager
         android:layout_marginTop="8dp"

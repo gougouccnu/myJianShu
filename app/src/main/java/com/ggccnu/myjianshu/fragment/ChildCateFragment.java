@@ -68,16 +68,16 @@ public class ChildCateFragment extends Fragment {
 
         List<Article> mArticleList = new ArrayList<>();
         mArticleList.add(new Article(0, "Lucy", 0, 2, 5, 1, 3, "日报", "404", "404"));
-
-        mCategoryList.add(new Category(0, "cate0", "", 0));
-        //mCategoryList.add(new Category(1, "cate1", "", 1));
+        mArticleList.add(new Article(1, "Jack", 0, 2, 5, 1, 3, "日报", "404", "404"));
+        mCategoryList.add(new Category(0, "child_cate0", "", 0));
+        mCategoryList.add(new Category(1, "child_cate1", "", 1));
 
         for (int i = 0; i < mCategoryList.size(); i++) {
             CateDetailFragment mCateDetailFragment = new CateDetailFragment();
-            Bundle mBundle2 = new Bundle();
-            mBundle2.putInt("cid", mCategoryList.get(i).getId());
-            mBundle2.putSerializable("articles", (Serializable) mArticleList);
-            mCateDetailFragment.setArguments(mBundle2);
+            Bundle mBundle = new Bundle();
+            mBundle.putInt("cid", mCategoryList.get(i).getId());
+            mBundle.putSerializable("articles", (Serializable) mArticleList);
+            mCateDetailFragment.setArguments(mBundle);
             mCateDetailFragmentList.add(mCateDetailFragment);
         }
 
