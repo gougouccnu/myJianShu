@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private void initBmobData() {
         for (int i = 1; i < 5; i++) {
             for (int articleId = 0; articleId < 5; articleId++) {
-                new Article(articleId, "Lucy", i, 2, 5, 1, 3, "日报", "404", "404").save(this, new SaveListener() {
+                new Article(articleId, "Lucy", i, 2, 5, 1, 3, "日报", "404", "404", "biaoti").save(this, new SaveListener() {
                     @Override
                     public void onSuccess() {
 

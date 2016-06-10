@@ -67,8 +67,8 @@ public class ChildCateFragment extends Fragment {
     private void initView() {
 
         List<Article> mArticleList = new ArrayList<>();
-        mArticleList.add(new Article(0, "Lucy", 0, 2, 5, 1, 3, "日报", "404", "404"));
-        mArticleList.add(new Article(1, "Jack", 0, 2, 5, 1, 3, "日报", "404", "404"));
+        mArticleList.add(new Article(0, "Lucy", 0, 2, 5, 1, 3, "日报", "404", "404", "标题"));
+        mArticleList.add(new Article(1, "Jack", 0, 2, 5, 1, 3, "日报", "404", "404", "标题"));
         mCategoryList.add(new Category(0, "child_cate0", "", 0));
         mCategoryList.add(new Category(1, "child_cate1", "", 1));
 

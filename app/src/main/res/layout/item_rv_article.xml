@@ -1,13 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="100dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="false"
+        android:layout_toLeftOf="@+id/iv_article_picture">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_article_title">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_author_pic"
+            android:adjustViewBounds="false"
+            android:background="@drawable/abc_ic_star_black_16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="女神jing进化论"
+            android:id="@+id/tv_author_name"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20小时前"
+            android:id="@+id/tv_article_time"
+            android:layout_gravity="right" />
+    </LinearLayout>
+
+
+    </LinearLayout>
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="你可以不优秀，但一定要强大"
+        android:id="@+id/tv_article_title"
+        android:layout_centerVertical="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tv_article_title">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="读书"
+            android:id="@+id/tv_article_category"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2134次阅.152次评论.98次喜欢"
+            android:id="@+id/tv_article_likes"/>
+    </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WELCOME"
-        android:id="@+id/tv_test"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
+        android:id="@+id/iv_article_picture"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/ic_launcher"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

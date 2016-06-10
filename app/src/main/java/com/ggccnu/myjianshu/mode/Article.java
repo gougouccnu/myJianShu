@@ -17,8 +17,10 @@ public class Article extends BmobObject {
     private String tag;
     private String authorIconUrl;
     private String pictureUrl;
+    private String title;
 
-    public Article(int id, String author, int cid, int readTimes, int comments, int likes, int donate, String tag, String authorIconUrl, String pictureUrl) {
+    public Article(int id, String author, int cid, int readTimes, int comments,
+                   int likes, int donate, String tag, String authorIconUrl, String pictureUrl, String title) {
         this.id = id;
         this.author = author;
         this.cid = cid;
@@ -29,6 +31,7 @@ public class Article extends BmobObject {
         this.tag = tag;
         this.authorIconUrl = authorIconUrl;
         this.pictureUrl = pictureUrl;
+        this.title = title;
     }
 
     public int getId() {
@@ -110,4 +113,14 @@ public class Article extends BmobObject {
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
     }
+
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 }
