@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.adapter.ArticleAdapter;
@@ -21,8 +22,9 @@ import java.util.List;
 /**
  * Created by lishaowei on 16/6/4.
  */
-public class CateDetailFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class CateDetailFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String TAG = "CateDetailFragment" ;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView rvArticle;
     private List<Article> mArticleList = new ArrayList<>();
@@ -64,8 +66,17 @@ public class CateDetailFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onRefresh() {
+        mSwipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 刷新文章 TODO:
 
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
     }
+
+
 
     private void initViews(View view) {
         rvArticle = (RecyclerView) view.findViewById(R.id.rv_article);
@@ -75,6 +86,17 @@ public class CateDetailFragment extends Fragment implements SwipeRefreshLayout.O
         rvArticle.setLayoutManager(new LinearLayoutManager(getActivity()));
         mArticleAdapter = new ArticleAdapter(mArticleList);
         rvArticle.setAdapter(mArticleAdapter);
+        mArticleAdapter.setOnItemClickLitener(new ArticleAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getActivity(), "item " + position + " clicked", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
     }
 
     @Override

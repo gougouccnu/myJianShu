@@ -55,7 +55,5 @@ public class SplashActivity extends Activity {
                 //HankkinUtils.showToast(SplasActivity.this, s);
             }
         });
-
-
     }
 }

@@ -1,46 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
-
-    <TextView
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <Button
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="发现"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_faxian"
-        android:id="@+id/tvFaXian" />
+        android:id="@+id/btn_FaXian" />
 
-    <TextView
+    <Button
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="关注"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_guanzhu"
-        android:id="@+id/tvGuanZhu" />
+        android:id="@+id/btn_GuanZhu" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imgWrite" />
+        android:id="@+id/iv_Write" />
 
-    <TextView
+    <Button
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="消息"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_xiaoxi"
-        android:id="@+id/tvXiaoXi" />
+        android:id="@+id/btn_XiaoXi" />
 
-    <TextView
+    <Button
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="我的"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_wode"
-        android:id="@+id/tvWoDe" />
+        android:id="@+id/btn_WoDe" />
 </LinearLayout>
+
+    <!--LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="注册"
+            android:gravity="center"
+            android:id="@+id/btn_register"/>
+
+        <Button
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="登录"
+            android:gravity="center"
+            android:id="@+id/btn_login"/>
+    </LinearLayout-->
+</FrameLayout>

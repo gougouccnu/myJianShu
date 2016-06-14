@@ -3,10 +3,13 @@ package com.ggccnu.myjianshu.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.ggccnu.myjianshu.R;
@@ -21,11 +24,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final int UPDATE_VIEWPAGE = 0;
     /**
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 选项fragment界面
      */
-    private ArrayList<android.support.v4.app.Fragment> mCateDetailFragmentList   = new ArrayList<>();
+    private ArrayList<Fragment> mCateDetailFragmentList = new ArrayList<>();
 
     /**
      * 分类数组
@@ -48,6 +52,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Handler mHandler;
     private Person mPerson;
+
+    //@Bind(R.id.btn_FaXian)
+    //Button btnFaxian;
+    @Bind(R.id.btn_GuanZhu)
+    Button btnGuanZhu;
+    @Bind(R.id.iv_Write)
+    ImageView ivWrite;
+    @Bind(R.id.btn_XiaoXi)
+    Button btnXiaoxi;
+    @Bind(R.id.btn_WoDe)
+    Button btnWoDe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +147,36 @@ public class MainActivity extends AppCompatActivity {
                 mPagerTabs.setViewPager(mPager);
             }
         };
+
+        Button btnFaxian = (Button) findViewById(R.id.btn_FaXian);
+        if (btnFaxian != null) {
+            btnFaxian.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+        /*
+        btnGuanZhu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        btnXiaoxi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        btnWoDe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        */
 
     }
 
