@@ -1,5 +1,6 @@
 package com.ggccnu.myjianshu.adapter;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.Article;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -26,9 +28,11 @@ import java.util.List;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
 
     private List<Article> mArticleList;
+    private Context mContext;
 
-    public ArticleAdapter(List<Article> data) {
+    public ArticleAdapter(List<Article> data, Context context) {
         mArticleList = data;
+        mContext = context;
     }
 
     @Override
@@ -52,6 +56,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                         Bitmap bmp=(Bitmap)msg.obj;
                         holder.iv_article_picture.setImageBitmap(bmp);
                         break;
+                    case 11:
+                        holder.iv_author_pic.setImageBitmap((Bitmap)msg.obj);
                 }
             };
         };
@@ -75,6 +81,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 Message msg = new Message();
                 msg.what = 10;
                 msg.obj = bmp;
+                //System.out.println("000");
+                handle.sendMessage(msg);
+            }
+        }).start();
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                Bitmap bmpAuthorIcon = getURLimage(mArticleList.get(position).getAuthorIconUrl());
+                Message msg = new Message();
+                msg.what = 11;
+                msg.obj = bmpAuthorIcon;
                 //System.out.println("000");
                 handle.sendMessage(msg);
             }
@@ -114,7 +133,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView iv_author_pic;
+        public RoundedImageView iv_author_pic = new RoundedImageView(mContext);
         public TextView tv_author_name;
         public TextView tv_article_time;
         public TextView tv_article_title;
@@ -124,7 +143,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
-            iv_author_pic = (ImageView) itemView.findViewById(R.id.iv_author_pic);
+            iv_author_pic = (RoundedImageView) itemView.findViewById(R.id.iv_author_pic);
             tv_author_name = (TextView) itemView.findViewById(R.id.tv_author_name);
             tv_article_time = (TextView) itemView.findViewById(R.id.tv_article_time);
             tv_article_title = (TextView) itemView.findViewById(R.id.tv_article_title);

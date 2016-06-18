@@ -84,7 +84,7 @@ public class CateDetailFragment extends Fragment implements SwipeRefreshLayout.O
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         rvArticle.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mArticleAdapter = new ArticleAdapter(mArticleList);
+        mArticleAdapter = new ArticleAdapter(mArticleList, getActivity());
         rvArticle.setAdapter(mArticleAdapter);
         mArticleAdapter.setOnItemClickLitener(new ArticleAdapter.OnItemClickLitener() {
             @Override

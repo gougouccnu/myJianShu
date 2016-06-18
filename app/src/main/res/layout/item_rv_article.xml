@@ -23,33 +23,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <!--ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/iv_author_pic"
-            android:adjustViewBounds="false"
-            android:background="@drawable/abc_ic_star_black_16dp" />
+            android:adjustViewBounds="true"
+            android:maxHeight="80dp"
+            android:maxWidth="80dp"
+            android:background="@drawable/rounded_image_view"/-->
+        <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/iv_author_pic"
+            android:scaleType="fitCenter"
+            app:riv_corner_radius="30dip"
+            app:riv_mutate_background="true"
+            app:riv_tile_mode="repeat"
+            app:riv_oval="true" />
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="女神jing进化论"
             android:id="@+id/tv_author_name"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_vertical"
+            android:textColor="#2b7db8"
+            android:textSize="10dp"
+            android:paddingLeft="5dp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20小时前"
             android:id="@+id/tv_article_time"
-            android:layout_gravity="right" />
+            android:textColor="#d0cfd0"
+            android:textSize="8dp"
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
 
@@ -60,26 +80,34 @@
         android:layout_height="wrap_content"
         android:text="你可以不优秀，但一定要强大"
         android:id="@+id/tv_article_title"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:textColor="#0b0b0b"
+        android:textSize="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
         android:orientation="horizontal"
-        android:layout_below="@+id/tv_article_title">
+        android:layout_below="@+id/tv_article_title"
+        android:paddingTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="读书"
-            android:id="@+id/tv_article_category"/>
+            android:id="@+id/tv_article_category"
+            android:textColor="#e08a80"
+            android:textSize="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2134次阅.152次评论.98次喜欢"
-            android:id="@+id/tv_article_likes"/>
+            android:id="@+id/tv_article_likes"
+            android:textColor="#d0cfd0"
+            android:textSize="10dp"
+            android:paddingLeft="5dp" />
     </LinearLayout>
 
     </RelativeLayout>
@@ -93,6 +121,7 @@
         android:adjustViewBounds="true"
         android:maxHeight="100dp"
         android:maxWidth="100dp"
-        android:paddingRight="20dp" />
+        android:paddingRight="20dp"
+        android:paddingLeft="5dp" />
 
 </RelativeLayout>

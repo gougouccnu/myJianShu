@@ -14,7 +14,8 @@
         android:text="发现"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_faxian"
-        android:id="@+id/btn_FaXian" />
+        android:id="@+id/btn_FaXian"
+        android:background="#fafafa" />
 
     <Button
         android:layout_width="0dip"
@@ -23,12 +24,16 @@
         android:text="关注"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_guanzhu"
-        android:id="@+id/btn_GuanZhu" />
+        android:id="@+id/btn_GuanZhu"
+        android:background="#fafafa" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/iv_Write" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/iv_Write"
+        android:layout_weight="1"
+        android:background="#fafafa"
+        android:src="@drawable/cb_icon_pen_normal" />
 
     <Button
         android:layout_width="0dip"
@@ -37,7 +42,8 @@
         android:text="消息"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_xiaoxi"
-        android:id="@+id/btn_XiaoXi" />
+        android:id="@+id/btn_XiaoXi"
+        android:background="#fafafa" />
 
     <Button
         android:layout_width="0dip"
@@ -46,7 +52,8 @@
         android:text="我的"
         android:gravity="center"
         android:drawableTop="@drawable/selector_icon_wode"
-        android:id="@+id/btn_WoDe" />
+        android:id="@+id/btn_WoDe"
+        android:background="#fafafa" />
 </LinearLayout>
 
     <!--LinearLayout
