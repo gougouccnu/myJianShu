@@ -2,7 +2,6 @@ package com.ggccnu.myjianshu.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.adapter.ArticleAdapter;
 import com.ggccnu.myjianshu.mode.Article;
+import com.ggccnu.myjianshu.widget.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by lishaowei on 16/6/4.
  */
-public class CateDetailFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "CateDetailFragment" ;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -104,6 +104,11 @@ public class CateDetailFragment extends Fragment implements SwipeRefreshLayout.O
         super.onActivityCreated(savedInstanceState);
 
         // TODO:
+    }
+
+    @Override
+    public void fetchData() {
+
     }
 
     @Override

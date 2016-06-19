@@ -7,29 +7,64 @@
     android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
-    <include layout="@layout/act_ui_topbar"
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/fragment"
+        android:layout_above="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
-    <com.astuetz.PagerSlidingTabStrip
-        android:id="@+id/tabs_main"
-        android:layout_width="wrap_content"
-        android:layout_height="48dip"
-        custom:pstsIndicatorHeight="4dip"
-        custom:pstsIndicatorColor="@color/colorAccent"
-        custom:pstsShouldExpand="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="match_parent"/>
 
     <android.support.v4.view.ViewPager
-        android:layout_marginTop="8dp"
-        android:id="@+id/pager_pgMain"
+        android:id="@+id/viewpager"
+        android:layout_above="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tabs_main" />
+        android:layout_height="match_parent" />
 
-    <include android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/act_ui_bottmbar"
-        android:layout_alignParentBottom="true" />
+    <com.ggccnu.myjianshu.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
 
 </RelativeLayout>
+
+<!--RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:custom="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+tools:context=".ui.MainActivity">
+
+<include layout="@layout/act_ui_topbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true" />
+<com.astuetz.PagerSlidingTabStrip
+    android:id="@+id/tabs_main"
+    android:layout_width="wrap_content"
+    android:layout_height="48dip"
+    custom:pstsIndicatorHeight="4dip"
+    custom:pstsIndicatorColor="@color/colorAccent"
+    custom:pstsShouldExpand="true"
+    android:layout_centerHorizontal="true" />
+
+<android.support.v4.view.ViewPager
+    android:layout_marginTop="8dp"
+    android:id="@+id/pager_pgMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/tabs_main" />
+
+<include android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    layout="@layout/act_ui_bottmbar"
+    android:layout_alignParentBottom="true" />
+
+<com.ggccnu.myjianshu.widget.TabLayout
+    android:id="@+id/tab_layout"
+    android:layout_alignParentBottom="true"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"/>
+
+</RelativeLayout-->
