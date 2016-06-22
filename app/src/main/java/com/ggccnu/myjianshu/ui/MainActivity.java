@@ -1,15 +1,10 @@
 package com.ggccnu.myjianshu.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Window;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.widget.BaseFragment;
-import com.ggccnu.myjianshu.widget.NoScrolledViewPager;
 import com.ggccnu.myjianshu.widget.TabItem;
 import com.ggccnu.myjianshu.widget.TabLayout;
 
@@ -21,7 +16,7 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
     private TabLayout mTabLayout;
     ArrayList<TabItem> tabs;
     private BaseFragment fragment;
-    private NoScrolledViewPager mNoScrolledViewPager;
+    //private NoScrolledViewPager mNoScrolledViewPager;
 
 
     @Override
@@ -37,73 +32,29 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
 
     private void initView2() {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mNoScrolledViewPager = (NoScrolledViewPager) findViewById(R.id.no_scrolled_viewpager);
+        //mNoScrolledViewPager = (NoScrolledViewPager) findViewById(R.id.no_scrolled_viewpager);
     }
 
     private void initData(){
         tabs = new ArrayList<TabItem>();
         tabs.add(new TabItem(R.drawable.selector_icon_faxian, R.string.faxian, FaxianFragment.class));
         tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.guanzhu, GuanzhuFragment.class));
-        tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.guanzhu, GuanzhuFragment.class));
+        tabs.add(new TabItem(R.drawable.cb_icon_pen_normal, R.string.write, GuanzhuFragment.class));
         tabs.add(new TabItem(R.drawable.selector_icon_xiaoxi, R.string.xiaoxi, XiaoxiFragment.class));
         tabs.add(new TabItem(R.drawable.selector_icon_wode, R.string.wode, WodeFragment.class));
 
         mTabLayout.initData(tabs, this);
         mTabLayout.setCurrentTab(0);
-
-        FragAdapter adapter = new FragAdapter(getSupportFragmentManager());
-        mNoScrolledViewPager.setAdapter(adapter);
-        mNoScrolledViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mTabLayout.setCurrentTab(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     @Override
     public void onTabClick(TabItem tabItem) {
-        mNoScrolledViewPager.setCurrentItem(tabs.indexOf(tabItem));
-    }
+        try {
+            BaseFragment fragment= tabItem.tagFragmentClz.newInstance();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment,fragment).commitAllowingStateLoss();
 
-    public class FragAdapter extends FragmentPagerAdapter {
-        public FragAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        /**
-         * Return the Fragment associated with a specified position.
-         *
-         * @param position
-         */
-        @Override
-        public Fragment getItem(int position) {
-            try {
-                return tabs.get(position).tagFragmentClz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            return fragment;
-        }
-
-        /**
-         * Return the number of views available.
-         */
-        @Override
-        public int getCount() {
-            return tabs.size();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 }
