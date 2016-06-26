@@ -10,7 +10,8 @@
     <FrameLayout
         android:id="@+id/fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tab_layout" />
 
     <!--com.ggccnu.myjianshu.widget.NoScrolledViewPager
         android:id="@+id/no_scrolled_viewpager"

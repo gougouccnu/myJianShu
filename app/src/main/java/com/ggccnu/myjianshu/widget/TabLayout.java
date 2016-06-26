@@ -5,7 +5,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.ggccnu.myjianshu.R;
 
 import java.util.ArrayList;
 
@@ -60,7 +63,56 @@ public class TabLayout extends LinearLayout implements OnClickListener {
 
     @Override
     public void onClick(View view) {
+        View mView;
+
         listener.onTabClick((TabItem) view.getTag());
+        // 设置选中的tab状态为selected
+        if (view != selectView) {
+            selectView.setSelected(false);
+            view.setSelected(true);
+            selectView = view;
+        }
+        for (int i = 0; i < mTabCount; i++) {
+            mView = getChildAt(i);
+            if (mView == view) {
+                ((TabView)mView).mTabLable.setTextColor(0xffff0000);
+            } else {
+                ((TabView)mView).mTabLable.setTextColor(0xff000000);
+            }
+        }
+        //setTabNotification(3, true);
+    }
+
+    /**
+     * Sets the text colors for the different states (normal, selected)
+     * used for the tabs.
+     * @param normalColor
+     * @param selectedColor
+     */
+    public void setTabTextColors(int normalColor, int selectedColor) {
+        View view = null;
+        for (int i = 0; i < mTabCount; i++) {
+            view = getChildAt(i);
+            if (view.isSelected()) {
+                ((TabView)view).mTabLable.setTextColor(selectedColor);
+            } else {
+                ((TabView)view).mTabLable.setTextColor(normalColor);
+            }
+        }
+    }
+
+    /**
+     * tab栏有新消息时，更改tab的图标
+     * @param tabIndex
+     * @param hasNotification
+     */
+    public void setTabNotification(int tabIndex, boolean hasNotification) {
+        ImageView imv = ((TabView)getChildAt(tabIndex)).mTabImage;
+        if (hasNotification) {
+            imv.setImageResource(R.drawable.cb_icon_discover_selected);
+        } else {
+            imv.setImageResource(R.drawable.cb_icon_discover_normal);
+        }
     }
 
     public void setCurrentTab(int i) {
@@ -78,7 +130,6 @@ public class TabLayout extends LinearLayout implements OnClickListener {
     }
 
     public interface OnTabClickListener{
-
         void onTabClick(TabItem tabItem);
     }
 }

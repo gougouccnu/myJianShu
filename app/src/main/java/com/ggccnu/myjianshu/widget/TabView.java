@@ -16,8 +16,8 @@ import com.ggccnu.myjianshu.R;
  */
 public class TabView extends LinearLayout implements View.OnClickListener {
 
-    private ImageView mTabImage;
-    private TextView mTabLable;
+    public ImageView mTabImage;
+    public TextView mTabLable;
 
     public TabView(Context context) {
         super(context);

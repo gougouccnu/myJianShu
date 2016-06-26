@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,6 +99,7 @@ public class FaxianFragment extends BaseFragment {
                     Log.d(TAG, "handle message");
                     // 添加子frag
                     ChildCateFragment mChildCateFragment = new ChildCateFragment();
+
                     Bundle mBundle = new Bundle();
                     mBundle.putInt("cid", mCategoryList.get(0).getId());
                     mBundle.putSerializable("articles", (Serializable) msg.obj);
@@ -118,7 +120,7 @@ public class FaxianFragment extends BaseFragment {
                     // Initialize the ViewPager and set an adapter
                     mPager = (ViewPager) view.findViewById(R.id.pager_pgMain);
                     mPagerTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs_main);
-                    mPager.setAdapter(new CategoryFragmentAdaptor(getFragmentManager(), mCateDetailFragmentList, mCategoryList));
+                    mPager.setAdapter(new CategoryFragmentAdaptor(getChildFragmentManager(), mCateDetailFragmentList, mCategoryList));
                     mPagerTabs.setViewPager(mPager);
                 }
             }
@@ -183,6 +185,8 @@ public class FaxianFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
+        // save child fragment back stack
+
     }
 
     /**
