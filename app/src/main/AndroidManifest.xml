@@ -25,6 +25,8 @@
         <activity android:name=".ui.BaseActivity" />
         <activity
             android:name=".ui.MainActivity" />
+        <activity
+            android:name=".ui.WriteArticleActivity" />
     </application>
 
 </manifest>

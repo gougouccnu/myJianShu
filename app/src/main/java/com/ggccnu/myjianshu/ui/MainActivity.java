@@ -1,8 +1,11 @@
 package com.ggccnu.myjianshu.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.widget.BaseFragment;
@@ -21,6 +24,7 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
     private BaseFragment fragment;
     //private NoScrolledViewPager mNoScrolledViewPager;
     Map<String, Fragment.SavedState> savedStateMap;
+    private ImageButton imgBtnWrite;
 
 
     @Override
@@ -33,6 +37,12 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
         //initBmobData();
         initView2();
         initData();
+        imgBtnWrite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, WriteArticleActivity.class));
+            }
+        });
     }
 
     public void setFragmentSavedState(String key, Fragment.SavedState state){
@@ -45,6 +55,7 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
 
     private void initView2() {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        imgBtnWrite = (ImageButton) findViewById(R.id.img_button_write);
         //mNoScrolledViewPager = (NoScrolledViewPager) findViewById(R.id.no_scrolled_viewpager);
     }
 
@@ -52,12 +63,18 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
         tabs = new ArrayList<TabItem>();
         tabs.add(new TabItem(R.drawable.selector_icon_faxian, R.string.faxian, FaxianFragment.class));
         tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.guanzhu, GuanzhuFragment.class));
-        tabs.add(new TabItem(R.drawable.cb_icon_pen_normal, R.string.write, GuanzhuFragment.class));
+        tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.write, GuanzhuFragment.class));
         tabs.add(new TabItem(R.drawable.selector_icon_xiaoxi, R.string.xiaoxi, XiaoxiFragment.class));
         tabs.add(new TabItem(R.drawable.selector_icon_wode, R.string.wode, WodeFragment.class));
 
         mTabLayout.initData(tabs, this);
-        mTabLayout.setCurrentTab(1);
+        mTabLayout.setCurrentTab(0);
+        try {
+            BaseFragment fragment = tabs.get(0).tagFragmentClz.newInstance();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment, fragment).commitAllowingStateLoss();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
