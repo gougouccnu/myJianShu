@@ -96,7 +96,7 @@ public class ChildCateFragment extends Fragment {
 //        mArticleList.add(new Article(1, "Jack", 1, 2, 5, 1, 3, "日报", "404", "404", "标题"));
         mCategoryList.add(new Category(0, "child_cate0", "", 0));
         mCategoryList.add(new Category(1, "child_cate1", "", 1));
-
+        // 把子fragment的cid和article传递过去
         for (int i = 0; i < mCategoryList.size(); i++) {
             CateDetailFragment mCateDetailFragment = new CateDetailFragment();
             Bundle mBundle = new Bundle();
@@ -108,21 +108,6 @@ public class ChildCateFragment extends Fragment {
 
     }
     private void queryCategoryAndArticle() {
-//        BmobQuery<Category> categoryBmobQuery = new BmobQuery<>();
-//        categoryBmobQuery.order("createdAt");// 按照时间降序
-//        categoryBmobQuery.findObjects(getActivity(), new FindListener<Category>() {
-//            @Override
-//            public void onSuccess(List<Category> list) {
-//                if (list != null && list.size() > 0) {
-//                    mCategoryList.addAll(list);
-//                }
-//            }
-//
-//            @Override
-//            public void onError(int i, String s) {
-//                //HankkinUtils.showToast(SplasActivity.this, s);
-//            }
-//        });
         BmobQuery<Article> articleBmobQuery = new BmobQuery<>();
         articleBmobQuery.order("createdAt");
         articleBmobQuery.findObjects(getActivity(), new FindListener<Article>() {

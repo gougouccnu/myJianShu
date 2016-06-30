@@ -73,24 +73,13 @@ public class FaxianFragment extends BaseFragment {
     }
 
     private void initViews(final View view) {
-/*        ArrayList<Category> mCategoryListTemp = (ArrayList<Category>) getIntent().getSerializableExtra("categories");
-        if (mCategoryListTemp != null) {
-            if (mCategoryListTemp.size() > 0) {
-                mCategoryList.addAll(mCategoryListTemp);
-                queryArticles();
-            } else {
-                queryCategory();
-            }
-        } else {
-            queryCategory();
-        }
-*/
         mCategoryList.clear();
         mCateDetailFragmentList.clear();
 
         mCategoryList.add(new Category(0, "文章", "", 0));
         mCategoryList.add(new Category(1, "专题", "", 1));
-        queryArticles();
+        // 获取子fragment里面cid=0的文章
+        queryArticlesByCategoryID(0);
         // 子线程中更新UI
         mHandler = new Handler() {
             @Override
@@ -132,6 +121,38 @@ public class FaxianFragment extends BaseFragment {
     private void queryArticles() {
         BmobQuery<Article> articlesBmobQuery = new BmobQuery<>();
         articlesBmobQuery.order("createdAt");
+        articlesBmobQuery.findObjects(getActivity(), new FindListener<Article>() {
+            @Override
+            public void onSuccess(List<Article> list) {
+                if (list != null && list.size() > 0) {
+                    final List<Article> mArticleList = new ArrayList<Article>();
+                    for (Article article : list) {
+                        mArticleList.add(article);
+                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Message msg = new Message();
+                            msg.what = UPDATE_VIEWPAGE;
+                            msg.obj = mArticleList;
+                            mHandler.sendMessage(msg);
+                        }
+                    }).start();
+                }
+                Log.d(TAG, "queryArticles onSuccess");
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.d(TAG, "queryArticles onError");
+            }
+        });
+    }
+
+    private void queryArticlesByCategoryID(Integer categoryID) {
+        BmobQuery<Article> articlesBmobQuery = new BmobQuery<>();
+        articlesBmobQuery.order("createdAt");
+        articlesBmobQuery.addWhereEqualTo("cid", categoryID);
         articlesBmobQuery.findObjects(getActivity(), new FindListener<Article>() {
             @Override
             public void onSuccess(List<Article> list) {
