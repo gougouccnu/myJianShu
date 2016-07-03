@@ -25,6 +25,7 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
     //private NoScrolledViewPager mNoScrolledViewPager;
     Map<String, Fragment.SavedState> savedStateMap;
     private ImageButton imgBtnWrite;
+    private BaseFragment mCurrentFragment;
 
 
     @Override
@@ -72,6 +73,8 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
         try {
             BaseFragment fragment = tabs.get(0).tagFragmentClz.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment, fragment).commitAllowingStateLoss();
+            // 保存当前的fragment，用于fragment transaction
+            mCurrentFragment = fragment;
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -79,10 +82,22 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
 
     @Override
     public void onTabClick(TabItem tabItem) {
+
         try {
-            BaseFragment fragment= tabItem.tagFragmentClz.newInstance();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment,fragment).commitAllowingStateLoss();
-            //getChildFragmentManager().beginTransaction().replace(R.id.fragment,fragment).commit();
+            BaseFragment toFragment= tabItem.tagFragmentClz.newInstance();
+            if(mCurrentFragment != toFragment) {
+                getSupportFragmentManager().executePendingTransactions();
+                if(toFragment.isAdded()) {
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(mCurrentFragment)
+                            .show(toFragment).commitAllowingStateLoss();
+                } else {
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(mCurrentFragment)
+                            .add(R.id.fragment, toFragment).commitAllowingStateLoss();
+                }
+                mCurrentFragment = toFragment;
+            }
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
