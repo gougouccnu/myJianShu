@@ -63,11 +63,11 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
 
     private void initData(){
         tabs = new ArrayList<TabItem>();
-        tabs.add(new TabItem(R.drawable.selector_icon_faxian, R.string.faxian, FaxianFragment.class));
-        tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.guanzhu, GuanzhuFragment.class));
-        tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.write, GuanzhuFragment.class));
-        tabs.add(new TabItem(R.drawable.selector_icon_xiaoxi, R.string.xiaoxi, XiaoxiFragment.class));
-        tabs.add(new TabItem(R.drawable.selector_icon_wode, R.string.wode, WodeFragment.class));
+        tabs.add(new TabItem(R.drawable.selector_icon_faxian, R.string.faxian));
+        tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.guanzhu));
+        tabs.add(new TabItem(R.drawable.selector_icon_guanzhu, R.string.write));
+        tabs.add(new TabItem(R.drawable.selector_icon_xiaoxi, R.string.xiaoxi));
+        tabs.add(new TabItem(R.drawable.selector_icon_wode, R.string.wode));
 
         tabsFragmetList = new ArrayList<BaseFragment>();
         tabsFragmetList.add(new FaxianFragment());
@@ -87,64 +87,16 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
     public void onTabClick(TabItem tabItem) {
         int toTabIndex = tabs.indexOf(tabItem);
         if(toTabIndex != mCurrentTabIndex) {
-            switch (toTabIndex) {
-                case 0:
-                    if(tabsFragmetList.get(0).isAdded()) {
-                        getSupportFragmentManager().beginTransaction()
-                                .show(tabsFragmetList.get(0))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    } else {
-                        getSupportFragmentManager().beginTransaction()
-                                .add(R.id.fragment, tabsFragmetList.get(0))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    }
-                    break;
-                case 1:
-                    if(tabsFragmetList.get(1).isAdded()) {
-                        getSupportFragmentManager().beginTransaction()
-                                .show(tabsFragmetList.get(1))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    } else {
-                        getSupportFragmentManager().beginTransaction()
-                                .add(R.id.fragment, tabsFragmetList.get(1))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    }
-                    break;
-                case 2:
-
-                    break;
-                case 3:
-                    if(tabsFragmetList.get(3).isAdded()) {
-                        getSupportFragmentManager().beginTransaction()
-                                .show(tabsFragmetList.get(3))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    } else {
-                        getSupportFragmentManager().beginTransaction()
-                                .add(R.id.fragment, tabsFragmetList.get(3))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    }
-                    break;
-                case 4:
-                    if(tabsFragmetList.get(4).isAdded()) {
-                        getSupportFragmentManager().beginTransaction()
-                                .show(tabsFragmetList.get(4))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    } else {
-                        getSupportFragmentManager().beginTransaction()
-                                .add(R.id.fragment, tabsFragmetList.get(4))
-                                .hide(tabsFragmetList.get(mCurrentTabIndex))
-                                .commit();
-                    }
-                    break;
-                default:
-                    break;
+            if(tabsFragmetList.get(toTabIndex).isAdded()) {
+                getSupportFragmentManager().beginTransaction()
+                        .show(tabsFragmetList.get(toTabIndex))
+                        .hide(tabsFragmetList.get(mCurrentTabIndex))
+                        .commit();
+            } else {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment, tabsFragmetList.get(toTabIndex))
+                        .hide(tabsFragmetList.get(mCurrentTabIndex))
+                        .commit();
             }
             mCurrentTabIndex = toTabIndex;
         }
@@ -153,7 +105,5 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
     @Override
     public void onPause() {
         super.onPause();
-        //((NestedFragApp) getActivity().getApplication()).setFragmentSavedState(
-        //        SAVED_STATE_KEY, getFragmentManager().saveFragmentInstanceState(this));
     }
 }

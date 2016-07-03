@@ -13,11 +13,8 @@ public class TabItem {
      */
     public int lableResId;
 
-    public Class<? extends BaseFragment> tagFragmentClz;
-
-    public TabItem(int imageResId, int lableResId, Class<? extends BaseFragment> tagFragmentClz) {
+    public TabItem(int imageResId, int lableResId) {
         this.imageResId = imageResId;
         this.lableResId = lableResId;
-        this.tagFragmentClz = tagFragmentClz;
     }
 }

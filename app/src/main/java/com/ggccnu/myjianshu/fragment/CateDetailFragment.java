@@ -48,7 +48,6 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mCid = getArguments().getInt("cid");
-            queryArticlesByCategoryID(mCid);
         }
     }
 
@@ -56,6 +55,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.item_cate_detail_fragment, container, false);
+        queryArticlesByCategoryID(mCid);
         initViews(view);
         return view;
     }

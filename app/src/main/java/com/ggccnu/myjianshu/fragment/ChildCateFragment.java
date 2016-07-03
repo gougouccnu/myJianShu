@@ -91,17 +91,18 @@ public class ChildCateFragment extends Fragment {
     }
 
     private void initView() {
-
-//        mArticleList.add(new Article(0, "Lucy", 0, 2, 5, 1, 3, "日报", "404", "404", "标题"));
-//        mArticleList.add(new Article(1, "Jack", 1, 2, 5, 1, 3, "日报", "404", "404", "标题"));
-        mCategoryList.add(new Category(0, "child_cate0", "", 0));
-        mCategoryList.add(new Category(1, "child_cate1", "", 1));
+        mCategoryList.add(new Category(0, "发现", "", 0));
+        mCategoryList.add(new Category(1, "热门", "", 1));
+        mCategoryList.add(new Category(2, "七日热门", "", 0));
+        mCategoryList.add(new Category(3, "简书包", "", 1));
+        mCategoryList.add(new Category(4, "专栏", "", 0));
+        mCategoryList.add(new Category(5, "体验", "", 1));
         // 把子fragment的cid和article传递过去
         for (int i = 0; i < mCategoryList.size(); i++) {
             CateDetailFragment mCateDetailFragment = new CateDetailFragment();
             Bundle mBundle = new Bundle();
             mBundle.putInt("cid", mCategoryList.get(i).getId());
-            mBundle.putSerializable("articles", (Serializable) mArticleList);
+            //mBundle.putSerializable("articles", (Serializable) mArticleList);
             mCateDetailFragment.setArguments(mBundle);
             mCateDetailFragmentList.add(mCateDetailFragment);
         }
