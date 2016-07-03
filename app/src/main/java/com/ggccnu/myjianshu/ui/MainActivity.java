@@ -25,7 +25,8 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
     //private NoScrolledViewPager mNoScrolledViewPager;
     Map<String, Fragment.SavedState> savedStateMap;
     private ImageButton imgBtnWrite;
-    private BaseFragment mCurrentFragment;
+    private int mCurrentTabIndex;
+    private ArrayList<BaseFragment> tabsFragmetList;
 
 
     @Override
@@ -68,38 +69,84 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
         tabs.add(new TabItem(R.drawable.selector_icon_xiaoxi, R.string.xiaoxi, XiaoxiFragment.class));
         tabs.add(new TabItem(R.drawable.selector_icon_wode, R.string.wode, WodeFragment.class));
 
+        tabsFragmetList = new ArrayList<BaseFragment>();
+        tabsFragmetList.add(new FaxianFragment());
+        tabsFragmetList.add(new GuanzhuFragment());
+        tabsFragmetList.add(new GuanzhuFragment()); //fake fragment
+        tabsFragmetList.add(new XiaoxiFragment());
+        tabsFragmetList.add(new WodeFragment());
+
         mTabLayout.initData(tabs, this);
         mTabLayout.setCurrentTab(0);
-        try {
-            BaseFragment fragment = tabs.get(0).tagFragmentClz.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment, fragment).commitAllowingStateLoss();
-            // 保存当前的fragment，用于fragment transaction
-            mCurrentFragment = fragment;
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment, tabsFragmetList.get(0)).commit();
+        mCurrentTabIndex = 0;
     }
 
     @Override
     public void onTabClick(TabItem tabItem) {
+        int toTabIndex = tabs.indexOf(tabItem);
+        if(toTabIndex != mCurrentTabIndex) {
+            switch (toTabIndex) {
+                case 0:
+                    if(tabsFragmetList.get(0).isAdded()) {
+                        getSupportFragmentManager().beginTransaction()
+                                .show(tabsFragmetList.get(0))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    } else {
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.fragment, tabsFragmetList.get(0))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    }
+                    break;
+                case 1:
+                    if(tabsFragmetList.get(1).isAdded()) {
+                        getSupportFragmentManager().beginTransaction()
+                                .show(tabsFragmetList.get(1))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    } else {
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.fragment, tabsFragmetList.get(1))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    }
+                    break;
+                case 2:
 
-        try {
-            BaseFragment toFragment= tabItem.tagFragmentClz.newInstance();
-            if(mCurrentFragment != toFragment) {
-                getSupportFragmentManager().executePendingTransactions();
-                if(toFragment.isAdded()) {
-                    getSupportFragmentManager().beginTransaction()
-                            .hide(mCurrentFragment)
-                            .show(toFragment).commitAllowingStateLoss();
-                } else {
-                    getSupportFragmentManager().beginTransaction()
-                            .hide(mCurrentFragment)
-                            .add(R.id.fragment, toFragment).commitAllowingStateLoss();
-                }
-                mCurrentFragment = toFragment;
+                    break;
+                case 3:
+                    if(tabsFragmetList.get(3).isAdded()) {
+                        getSupportFragmentManager().beginTransaction()
+                                .show(tabsFragmetList.get(3))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    } else {
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.fragment, tabsFragmetList.get(3))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    }
+                    break;
+                case 4:
+                    if(tabsFragmetList.get(4).isAdded()) {
+                        getSupportFragmentManager().beginTransaction()
+                                .show(tabsFragmetList.get(4))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    } else {
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.fragment, tabsFragmetList.get(4))
+                                .hide(tabsFragmetList.get(mCurrentTabIndex))
+                                .commit();
+                    }
+                    break;
+                default:
+                    break;
             }
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            mCurrentTabIndex = toTabIndex;
         }
     }
 
