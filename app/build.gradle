@@ -29,4 +29,5 @@ dependencies {
     compile rootProject.ext.dependencies["support-v4"]
     compile rootProject.ext.dependencies["recyclerview-v7"]
     compile 'com.makeramen:roundedimageview:2.2.1'
+    compile project(':ViewPagerIndicator')
 }

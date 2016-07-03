@@ -82,7 +82,7 @@ public class ChildCateFragment extends Fragment {
             public void handleMessage(Message msg) {
                 if(msg.what == UPDATE_VIEWPAGE) {
                     initView();
-                    mPager.setAdapter(new CategoryFragmentAdaptor(getFragmentManager(), mCateDetailFragmentList, mCategoryList));
+                    mPager.setAdapter(new CategoryFragmentAdaptor(getChildFragmentManager(), mCateDetailFragmentList, mCategoryList));
                     mPagerTabs.setViewPager(mPager);
                 }
             }

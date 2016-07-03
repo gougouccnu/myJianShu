@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,10 @@ import android.widget.Toast;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.adapter.ArticleAdapter;
+import com.ggccnu.myjianshu.adapter.ViewPagerFragAdapter;
 import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.widget.BaseFragment;
+import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,9 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     private Handler mUpdateItemsHandler,mLoadItemsHandler;
     //use weak reference or can not switch back tab
     //private RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());//TODO: use other get context
+
+    private ViewPager mViewPager;
+    private LinePageIndicator mLinePageIndicator;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +116,18 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                 }
             }
         };
+        if (mCid == 0) {
+            // set view pager
+            mViewPager = (ViewPager) view.findViewById(R.id.view_pager_cate_detail_fragment);
+            mViewPager.setAdapter(new ViewPagerFragAdapter(getChildFragmentManager()));
+
+            mLinePageIndicator = (LinePageIndicator) view.findViewById(R.id.line_page_indicator);
+            mLinePageIndicator.setViewPager(mViewPager);
+
+            mViewPager.setVisibility(View.VISIBLE);
+            mLinePageIndicator.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void queryArticlesByCategoryID(Integer categoryID) {

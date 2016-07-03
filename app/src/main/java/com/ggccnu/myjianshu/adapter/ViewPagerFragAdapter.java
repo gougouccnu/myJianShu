@@ -7,8 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 /**
  * Created by lishaowei on 16/6/19.
  */
-public class FragAdapter extends FragmentPagerAdapter {
-    public FragAdapter(FragmentManager fm) {
+public class ViewPagerFragAdapter extends FragmentPagerAdapter {
+
+    public ViewPagerFragAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -19,7 +20,9 @@ public class FragAdapter extends FragmentPagerAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        return null;
+        Fragment fragment = new PictureFragment();
+
+        return fragment;
     }
 
     /**
@@ -27,6 +30,6 @@ public class FragAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 0;
+        return 3;
     }
 }
