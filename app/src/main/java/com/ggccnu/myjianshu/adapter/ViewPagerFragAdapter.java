@@ -4,13 +4,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.ggccnu.myjianshu.mode.ViewPagerSlide;
+
+import java.util.List;
+
 /**
  * Created by lishaowei on 16/6/19.
  */
 public class ViewPagerFragAdapter extends FragmentPagerAdapter {
 
-    public ViewPagerFragAdapter(FragmentManager fm) {
+    private List<ViewPagerSlide> mViewPagerSlideList;
+
+    public ViewPagerFragAdapter(FragmentManager fm, List<ViewPagerSlide> viewPagerSlideList) {
         super(fm);
+        mViewPagerSlideList = viewPagerSlideList;
     }
 
     /**
@@ -20,7 +27,7 @@ public class ViewPagerFragAdapter extends FragmentPagerAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = new PictureFragment();
+        Fragment fragment = new PictureFragment(mViewPagerSlideList.get(position));
 
         return fragment;
     }
@@ -30,6 +37,6 @@ public class ViewPagerFragAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 3;
+        return mViewPagerSlideList.size();
     }
 }

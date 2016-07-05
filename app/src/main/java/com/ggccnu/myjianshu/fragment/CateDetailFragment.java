@@ -18,6 +18,7 @@ import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.adapter.ArticleAdapter;
 import com.ggccnu.myjianshu.adapter.ViewPagerFragAdapter;
 import com.ggccnu.myjianshu.mode.Article;
+import com.ggccnu.myjianshu.mode.ViewPagerSlide;
 import com.ggccnu.myjianshu.widget.BaseFragment;
 import com.viewpagerindicator.LinePageIndicator;
 
@@ -48,6 +49,10 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
 
     private ViewPager mViewPager;
     private LinePageIndicator mLinePageIndicator;
+
+    private List<ViewPagerSlide> mViewPagerSlideList = new ArrayList<>();
+    private static final int LOAD_SLIDES = 4;
+    private Handler mLoadSlidesHandler;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +95,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
 
 
 
-    private void initViews(View view) {
+    private void initViews(final View view) {
         rvArticle = (RecyclerView) view.findViewById(R.id.rv_article);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swpRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -117,15 +122,25 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
             }
         };
         if (mCid == 0) {
-            // set view pager
-            mViewPager = (ViewPager) view.findViewById(R.id.view_pager_cate_detail_fragment);
-            mViewPager.setAdapter(new ViewPagerFragAdapter(getChildFragmentManager()));
+            //请求服务器获取picture slide URL
+            queryViewPagerSlideURL();
 
-            mLinePageIndicator = (LinePageIndicator) view.findViewById(R.id.line_page_indicator);
-            mLinePageIndicator.setViewPager(mViewPager);
+            mLoadSlidesHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    if(msg.what == LOAD_SLIDES) {
+                        // set view pager
+                        mViewPager = (ViewPager) view.findViewById(R.id.view_pager_cate_detail_fragment);
+                        mViewPager.setAdapter(new ViewPagerFragAdapter(getChildFragmentManager(), mViewPagerSlideList));
 
-            mViewPager.setVisibility(View.VISIBLE);
-            mLinePageIndicator.setVisibility(View.VISIBLE);
+                        mLinePageIndicator = (LinePageIndicator) view.findViewById(R.id.line_page_indicator);
+                        mLinePageIndicator.setViewPager(mViewPager);
+
+                        mViewPager.setVisibility(View.VISIBLE);
+                        mLinePageIndicator.setVisibility(View.VISIBLE);
+                    }
+                }
+            };
         }
 
     }
@@ -155,6 +170,34 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
             @Override
             public void onError(int i, String s) {
                 Log.d(TAG, "query new Articles onError");
+            }
+        });
+    }
+
+    private void queryViewPagerSlideURL( ) {
+        BmobQuery<ViewPagerSlide> slideBmobQuery = new BmobQuery<>();
+        slideBmobQuery.order("createdAt");
+        slideBmobQuery.findObjects(getActivity(), new FindListener<ViewPagerSlide>() {
+            @Override
+            public void onSuccess(List<ViewPagerSlide> list) {
+                if (list != null && list.size() > 0) {
+                    mViewPagerSlideList.addAll(list);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Message msg = new Message();
+                            msg.what = LOAD_SLIDES;
+                            //msg.obj = mArticleList;
+                            mLoadSlidesHandler.sendMessage(msg);
+                        }
+                    }).start();
+                }
+                Log.d(TAG, "query new viewpagerslides onSuccess");
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.d(TAG, "query new viewpagerslides onError:" + s);
             }
         });
     }
