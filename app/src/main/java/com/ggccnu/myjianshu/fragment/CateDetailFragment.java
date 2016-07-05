@@ -24,6 +24,8 @@ import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
@@ -53,6 +55,10 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     private List<ViewPagerSlide> mViewPagerSlideList = new ArrayList<>();
     private static final int LOAD_SLIDES = 4;
     private Handler mLoadSlidesHandler;
+
+
+    Timer timer;
+    int page = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,12 +144,51 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
 
                         mViewPager.setVisibility(View.VISIBLE);
                         mLinePageIndicator.setVisibility(View.VISIBLE);
+
+                        pageSwitcher(3);
                     }
                 }
             };
         }
 
     }
+
+    // ---------------------------------------------------------------------------
+
+
+    public void pageSwitcher(int seconds) {
+        timer = new Timer(); // At this line a new Thread will be created
+        timer.scheduleAtFixedRate(new RemindTask(), 0, seconds * 1000); // delay
+        // in
+        // milliseconds
+    }
+
+    // this is an inner class...
+    class RemindTask extends TimerTask {
+
+        @Override
+        public void run() {
+
+            // As the TimerTask run on a seprate thread from UI thread we have
+            // to call runOnUiThread to do work on UI thread.
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+
+                    if (page > 1) { // In my case the number of pages are 2
+                        page = 0;
+                        //timer.cancel();
+                        // Showing a toast for just testing purpose
+                        //Toast.makeText(getContext(), "Timer stoped",
+                          //      Toast.LENGTH_LONG).show();
+                    } else {
+                        mViewPager.setCurrentItem(page++);
+                    }
+                }
+            });
+        }
+    }
+
+// ---------------------------------------------------------------------------
 
     private void queryArticlesByCategoryID(Integer categoryID) {
         BmobQuery<Article> articlesBmobQuery = new BmobQuery<>();
