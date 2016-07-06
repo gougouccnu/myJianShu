@@ -114,6 +114,8 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                 if(msg.what == FIRST_LOAD_ITEMS) {
                     mArticleAdapter = new ArticleAdapter(mArticleList, getActivity());
                     rvArticle.setAdapter(mArticleAdapter);
+                    // RecyclerView inside Scrollview时，让滑动smooth
+                    rvArticle.setNestedScrollingEnabled(false);
                     mArticleAdapter.setOnItemClickLitener(new ArticleAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
