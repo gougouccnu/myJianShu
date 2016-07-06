@@ -57,8 +57,9 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     private Handler mLoadSlidesHandler;
 
 
-    Timer timer;
-    int page = 0;
+    private Timer timer;
+    // slide page initial position
+    private int page = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,7 +146,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                         mViewPager.setVisibility(View.VISIBLE);
                         mLinePageIndicator.setVisibility(View.VISIBLE);
 
-                        pageSwitcher(3);
+                        pageAutoSwitcher(4);
                     }
                 }
             };
@@ -153,14 +154,9 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
 
     }
 
-    // ---------------------------------------------------------------------------
-
-
-    public void pageSwitcher(int seconds) {
+    private void pageAutoSwitcher(int seconds) {
         timer = new Timer(); // At this line a new Thread will be created
-        timer.scheduleAtFixedRate(new RemindTask(), 0, seconds * 1000); // delay
-        // in
-        // milliseconds
+        timer.scheduleAtFixedRate(new RemindTask(), 0, seconds * 1000); // delay in milliseconds
     }
 
     // this is an inner class...
@@ -174,7 +170,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
-                    if (page > 1) { // In my case the number of pages are 2
+                    if (page > mViewPagerSlideList.size()) { // In my case the number of pages are 2
                         page = 0;
                         //timer.cancel();
                         // Showing a toast for just testing purpose
