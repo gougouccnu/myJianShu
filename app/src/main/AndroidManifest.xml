@@ -27,6 +27,9 @@
             android:name=".ui.MainActivity" />
         <activity
             android:name=".ui.WriteArticleActivity" />
+        <activity
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:name=".ui.CateDetailActivity" />
     </application>
 
 </manifest>

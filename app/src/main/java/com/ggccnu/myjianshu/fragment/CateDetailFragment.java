@@ -1,5 +1,6 @@
 package com.ggccnu.myjianshu.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +20,7 @@ import com.ggccnu.myjianshu.adapter.ArticleAdapter;
 import com.ggccnu.myjianshu.adapter.ViewPagerFragAdapter;
 import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.mode.ViewPagerSlide;
+import com.ggccnu.myjianshu.ui.CateDetailActivity;
 import com.ggccnu.myjianshu.widget.BaseFragment;
 import com.viewpagerindicator.LinePageIndicator;
 
@@ -53,7 +55,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     private LinePageIndicator mLinePageIndicator;
 
     private List<ViewPagerSlide> mViewPagerSlideList = new ArrayList<>();
-    private static final int LOAD_SLIDES = 4;
+    private static final int MSG_LOAD_SLIDES = 4;
     private Handler mLoadSlidesHandler;
 
 
@@ -120,6 +122,17 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                         @Override
                         public void onItemClick(View view, int position) {
                             Toast.makeText(getActivity(), "item " + position + " clicked", Toast.LENGTH_LONG).show();
+                            // 跳转到article详细页面
+                            Intent intent = new Intent(getContext(), CateDetailActivity.class);
+                            /*
+                            intent.putExtra(ARTICLE_AUTHOR, mArticleList.get(position).getAuthor());
+                            intent.putExtra(ARTICLE_AUHTOR_PIC, mArticleList.get(position).getAuthorIconUrl());
+                            intent.putExtra(ARTICLE_TIME, mArticleList.get(position).getReadTimes());
+                            intent.putExtra(ARTICLE_TITLE, mArticleList.get(position).getTitle());
+                            intent.putExtra(ARTICLE_PICTURE, mArticleList.get(position).getPictureUrl());
+                            */
+                            intent.putExtra("article_item", mArticleList.get(position));
+                            startActivity(intent);
                         }
 
                         @Override
@@ -137,7 +150,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
             mLoadSlidesHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
-                    if(msg.what == LOAD_SLIDES) {
+                    if(msg.what == MSG_LOAD_SLIDES) {
                         // set view pager
                         mViewPager = (ViewPager) view.findViewById(R.id.view_pager_cate_detail_fragment);
                         mViewPager.setAdapter(new ViewPagerFragAdapter(getChildFragmentManager(), mViewPagerSlideList));
@@ -224,12 +237,14 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
             @Override
             public void onSuccess(List<ViewPagerSlide> list) {
                 if (list != null && list.size() > 0) {
-                    mViewPagerSlideList.addAll(list);
+                    if(list.size() != mViewPagerSlideList.size()) {
+                        mViewPagerSlideList.addAll(list);
+                    }
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             Message msg = new Message();
-                            msg.what = LOAD_SLIDES;
+                            msg.what = MSG_LOAD_SLIDES;
                             //msg.obj = mArticleList;
                             mLoadSlidesHandler.sendMessage(msg);
                         }
