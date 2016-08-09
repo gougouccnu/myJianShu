@@ -3,6 +3,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -48,4 +63,7 @@
         android:id="@+id/btn_donate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

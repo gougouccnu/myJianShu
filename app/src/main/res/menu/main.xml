@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.actionbartest.MainActivity" >
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_more"
         android:icon="@drawable/icon_pinglun_more"
-        android:showAsAction="never"
-        android:title="More"
-        tools:ignore="AppCompatResource" />
-
+        app:showAsAction="ifRoom"
+        android:title="More" />
+    <!--item
+        android:id="@+id/action_more"
+        android:icon="@drawable/icon_pinglun_more"
+        app:showAsAction="never"
+        android:title="more" /-->
 </menu>

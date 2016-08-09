@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +43,14 @@ public class CateDetailActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.act_ui_cate_detail);
+        // sets the toolbar as the app bar for the activity
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+        // Enable the Up button
+        ab.setDisplayHomeAsUpEnabled(true);
+
         final Article articleItem = (Article) getIntent().getSerializableExtra("article_item");
 
         iv_article_author_pic = (ImageView) findViewById(R.id.iv_author_pic);
@@ -50,6 +61,29 @@ public class CateDetailActivity extends BaseActivity{
         tv_article_time.setText(articleItem.getCreatedAt());
         btn_guanzhu = (Button) findViewById(R.id.btn_guanzhu);
         wv_article_content = (WebView) findViewById(R.id.wv_article_content);
+        wv_article_content.getSettings().setJavaScriptEnabled(true);
+        wv_article_content.setWebViewClient(
+                new WebViewClient() {
+                    @Override
+                    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+                        super.doUpdateVisitedHistory(view, url, isReload);
+                    }
+
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        view.loadUrl("javascript:(function() { " +
+                                "document.getElementsByTagName('header')[0].style.display=\"none\"; " +
+                                "})()");
+                    }
+
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
+                    }
+                }
+
+        );
         wv_article_content.loadUrl("http://www.jianshu.com/p/76e27f23e071");
         tv_donate_adv = (TextView) findViewById(R.id.tv_donate_adv);
         btn_donate = (Button) findViewById(R.id.btn_donate);
@@ -83,7 +117,7 @@ public class CateDetailActivity extends BaseActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_more:
                 Toast.makeText(this, "More", Toast.LENGTH_SHORT).show();
                 return true;
             default:
