@@ -7,10 +7,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -19,11 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ggccnu.myjianshu.R;
+import com.ggccnu.myjianshu.adapter.CommentListAdapter;
 import com.ggccnu.myjianshu.mode.Article;
+import com.ggccnu.myjianshu.mode.ArticleComment;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lishaowei on 16/8/4.
@@ -37,6 +44,11 @@ public class CateDetailActivity extends BaseActivity{
     private WebView wv_article_content;
     private TextView tv_donate_adv;
     private Button btn_donate;
+
+    private RecyclerView rv_comment;
+    private List<ArticleComment> mCommentList = new ArrayList<>();
+    private RecyclerView.LayoutManager mLayoutManager;
+    private CommentListAdapter mCommentAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,7 +99,26 @@ public class CateDetailActivity extends BaseActivity{
         wv_article_content.loadUrl("http://www.jianshu.com/p/76e27f23e071");
         tv_donate_adv = (TextView) findViewById(R.id.tv_donate_adv);
         btn_donate = (Button) findViewById(R.id.btn_donate);
+        rv_comment = (RecyclerView) findViewById(R.id.rv_comment);
 
+        for (int i = 0; i<5; i++) {
+            mCommentList.add(new ArticleComment("comment"));
+        }
+        mCommentAdapter = new CommentListAdapter(mCommentList, this);
+        rv_comment.setAdapter(mCommentAdapter);
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rv_comment.setLayoutManager(mLayoutManager);
+        mCommentAdapter.setOnItemClickLitener(new CommentListAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(CateDetailActivity.this, "item " + position + " clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
         //在消息队列中实现对控件的更改
         final Handler handle = new Handler() {
             public void handleMessage(Message msg) {

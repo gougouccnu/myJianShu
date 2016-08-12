@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="false"
+        android:layout_toLeftOf="@+id/iv_article_picture"
+        android:paddingLeft="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="你可以不优秀，但一定要强大"
+            android:id="@+id/tv_article_title"
+            android:layout_centerVertical="true"
+            android:textColor="#0b0b0b"
+            android:textSize="16dp" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
