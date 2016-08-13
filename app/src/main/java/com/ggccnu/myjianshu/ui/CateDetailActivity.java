@@ -25,6 +25,7 @@ import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.adapter.CommentListAdapter;
 import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.mode.ArticleComment;
+import com.ggccnu.myjianshu.mode.CommentReply;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -102,21 +103,25 @@ public class CateDetailActivity extends BaseActivity{
         rv_comment = (RecyclerView) findViewById(R.id.rv_comment);
 
         for (int i = 0; i<5; i++) {
-            mCommentList.add(new ArticleComment("comment"));
+            mCommentList.add(new ArticleComment("comment", null, false));
         }
+        List<CommentReply> commentReplyList = new ArrayList<>();
+        commentReplyList.add(new CommentReply("reply"));
+        mCommentList.add(new ArticleComment("comment", commentReplyList, true));
+
         mCommentAdapter = new CommentListAdapter(mCommentList, this);
         rv_comment.setAdapter(mCommentAdapter);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_comment.setLayoutManager(mLayoutManager);
         mCommentAdapter.setOnItemClickLitener(new CommentListAdapter.OnItemClickLitener() {
             @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(CateDetailActivity.this, "item " + position + " clicked", Toast.LENGTH_SHORT).show();
+            public void onCommentClick(View view, int position) {
+                Toast.makeText(CateDetailActivity.this, "comment " + position + " clicked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {
-
+            public void onReplyClick(View view, int position) {
+                Toast.makeText(CateDetailActivity.this, "reply " + position + " clicked", Toast.LENGTH_SHORT).show();
             }
         });
         //在消息队列中实现对控件的更改

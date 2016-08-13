@@ -42,7 +42,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ReplyViewHolder) {
             ((ReplyViewHolder) holder).tv_comment_main.setText("common");
             TextView tv_reply = new TextView(mContext);
@@ -53,6 +53,29 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     ViewGroup.LayoutParams.WRAP_CONTENT));
         } else if (holder instanceof CommonViewHolder) {
             ((CommonViewHolder) holder).tv_comment_main.setText("common");
+        }
+        // 如果设置了回调，则设置点击事件
+        if (mOnItemClickLitener != null)
+        {
+            holder.itemView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickLitener.onCommentClick(holder.itemView, pos);
+                }
+            });
+            // 回复点击事件
+            if (holder instanceof ReplyViewHolder) {
+                ((ReplyViewHolder) holder).parentLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int commentPosition = holder.getLayoutPosition();
+                        mOnItemClickLitener.onCommentClick(((ReplyViewHolder) holder).parentLayout, commentPosition);
+                    }
+                });
+            }
         }
     }
 
@@ -86,8 +109,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface OnItemClickLitener
     {
-        void onItemClick(View view, int position);
-        void onItemLongClick(View view, int position);
+        void onCommentClick(View view, int position);
+        void onReplyClick(View view, int position);
     }
 
     private OnItemClickLitener mOnItemClickLitener;
@@ -111,10 +134,10 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return COMMENT_COMMON;
-        } else {
+        if (mCommentList.get(position).hasReply) {
             return COMMENT_WITH_REPLY;
+        } else {
+            return COMMENT_COMMON;
         }
     }
 }
