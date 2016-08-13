@@ -4,9 +4,12 @@ package com.ggccnu.myjianshu.mode;
  * Created by lishaowei on 16/8/13.
  */
 public class CommentReply {
-    public String reply;
 
-    public CommentReply(String reply) {
+    private String reply;
+
+    private String author;
+
+    public CommentReply(String author, String reply) {
         this.reply = reply;
     }
 
@@ -16,5 +19,13 @@ public class CommentReply {
 
     public void setReply(String reply) {
         this.reply = reply;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

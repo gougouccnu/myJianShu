@@ -7,11 +7,11 @@ import java.util.List;
  */
 public class ArticleComment {
 
-    public String comment;
+    private String comment;
 
-    public boolean hasReply;
+    private Boolean hasReply;
 
-    public List<CommentReply>  commentReplyList;
+    private List<CommentReply>  commentReplyList;
 
     public ArticleComment(String comment, List<CommentReply> commentReplyList, boolean hasReply) {
         this.comment = comment;

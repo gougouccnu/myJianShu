@@ -102,11 +102,11 @@ public class CateDetailActivity extends BaseActivity{
         btn_donate = (Button) findViewById(R.id.btn_donate);
         rv_comment = (RecyclerView) findViewById(R.id.rv_comment);
 
-        for (int i = 0; i<5; i++) {
+        for (int i = 0; i<2; i++) {
             mCommentList.add(new ArticleComment("comment", null, false));
         }
         List<CommentReply> commentReplyList = new ArrayList<>();
-        commentReplyList.add(new CommentReply("reply"));
+        commentReplyList.add(new CommentReply("author X", "reply"));
         mCommentList.add(new ArticleComment("comment", commentReplyList, true));
 
         mCommentAdapter = new CommentListAdapter(mCommentList, this);
@@ -120,8 +120,12 @@ public class CateDetailActivity extends BaseActivity{
             }
 
             @Override
-            public void onReplyClick(View view, int position) {
-                Toast.makeText(CateDetailActivity.this, "reply " + position + " clicked", Toast.LENGTH_SHORT).show();
+            public void onReplyClick(View view, int replyPositon, int commentPosition) {
+                Toast.makeText(CateDetailActivity.this, "comment " + commentPosition + " reply " + replyPositon + " clicked", Toast.LENGTH_SHORT).show();
+                // 添加reply
+                mCommentList.get(commentPosition).getCommentReplyList().add(new CommentReply("author C", "reply c"));
+                // 刷新列表
+                mCommentAdapter.notifyDataSetChanged();
             }
         });
         //在消息队列中实现对控件的更改

@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.ArticleComment;
+import com.ggccnu.myjianshu.mode.CommentReply;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +22,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int COMMENT_WITH_REPLY = 1;
     private static final int COMMENT_COMMON = 2;
-    private List<ArticleComment> mCommentList;
+    private List<ArticleComment> mCommentList = new ArrayList<ArticleComment>();
     private Context mContext;
 
     public CommentListAdapter(List<ArticleComment> data, Context context) {
@@ -42,15 +44,17 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ReplyViewHolder) {
             ((ReplyViewHolder) holder).tv_comment_main.setText("common");
-            TextView tv_reply = new TextView(mContext);
-            tv_reply.setText("reply");
-
-            ((ReplyViewHolder) holder).parentLayout.addView(tv_reply, new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            // 找到reply,添加到comment下面
+            List<CommentReply> commentReplyList = mCommentList.get(position).getCommentReplyList();
+            // 新增reply，notify datasetchanged后重绘列表前要remove掉原来的
+            ((ReplyViewHolder) holder).parentLayout.removeAllViews();
+            for (int i = 0; i < commentReplyList.size(); i++) {
+                CommentReply commentReply = commentReplyList.get(i);
+                ((ReplyViewHolder) holder).parentLayout.addView(addReplyView(commentReply.getAuthor(), commentReply.getReply()));
+            }
         } else if (holder instanceof CommonViewHolder) {
             ((CommonViewHolder) holder).tv_comment_main.setText("common");
         }
@@ -68,15 +72,30 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
             // 回复点击事件
             if (holder instanceof ReplyViewHolder) {
-                ((ReplyViewHolder) holder).parentLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int commentPosition = holder.getLayoutPosition();
-                        mOnItemClickLitener.onCommentClick(((ReplyViewHolder) holder).parentLayout, commentPosition);
-                    }
-                });
+                for (int i = 0; i < ((ReplyViewHolder) holder).parentLayout.getChildCount(); i++) {
+                    final int finalI = i;
+                    ((ReplyViewHolder) holder).parentLayout.getChildAt(i).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mOnItemClickLitener.onReplyClick(((ReplyViewHolder) holder).parentLayout, finalI, position);
+                        }
+                    });
+                }
             }
         }
+    }
+
+    private View addReplyView(String author, String content) {
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.item_reply, null);
+        TextView tv = (TextView) view.findViewById(R.id.tv_item_reply);
+        tv.setText("@" + "author A " + content);
+        view.setLayoutParams(lp);
+        return view;
     }
 
     @Override
@@ -110,7 +129,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public interface OnItemClickLitener
     {
         void onCommentClick(View view, int position);
-        void onReplyClick(View view, int position);
+        void onReplyClick(View view, int replyPosition, int commentPosition);
     }
 
     private OnItemClickLitener mOnItemClickLitener;
@@ -134,10 +153,15 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     @Override
     public int getItemViewType(int position) {
-        if (mCommentList.get(position).hasReply) {
+        if (mCommentList.get(position).isHasReply()) {
             return COMMENT_WITH_REPLY;
         } else {
             return COMMENT_COMMON;
         }
+    }
+    public void updateCommentList(ArrayList<ArticleComment> commentArrayList) {
+        mCommentList.clear();
+        mCommentList.addAll(commentArrayList);
+        notifyDataSetChanged();
     }
 }
