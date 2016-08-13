@@ -57,6 +57,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         } else if (holder instanceof CommonViewHolder) {
             ((CommonViewHolder) holder).tv_comment_main.setText("common");
+        } else {
+
         }
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null)

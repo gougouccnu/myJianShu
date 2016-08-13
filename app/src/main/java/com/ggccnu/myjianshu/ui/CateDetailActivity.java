@@ -105,7 +105,7 @@ public class CateDetailActivity extends BaseActivity{
         for (int i = 0; i<2; i++) {
             mCommentList.add(new ArticleComment("comment", null, false));
         }
-        List<CommentReply> commentReplyList = new ArrayList<>();
+        final List<CommentReply> commentReplyList = new ArrayList<>();
         commentReplyList.add(new CommentReply("author X", "reply"));
         mCommentList.add(new ArticleComment("comment", commentReplyList, true));
 
@@ -117,13 +117,26 @@ public class CateDetailActivity extends BaseActivity{
             @Override
             public void onCommentClick(View view, int position) {
                 Toast.makeText(CateDetailActivity.this, "comment " + position + " clicked", Toast.LENGTH_SHORT).show();
+                // 带reply的帖子点击了主帖
+                if (mCommentList.get(position).isHasReply()) {
+                    // reply add到最后
+                    mCommentList.get(position).getCommentReplyList().add(new CommentReply("author d", "append reply"));
+                    mCommentAdapter.notifyDataSetChanged();
+                } else { // 给不带reply的帖子回复
+                    mCommentList.get(position).setHasReply(true);
+                    List<CommentReply> newReplyList = new ArrayList<CommentReply>();
+                    newReplyList.add(new CommentReply("author c", "reply c"));
+                    // 为comment添加reply
+                    mCommentList.get(position).setCommentReplyList(newReplyList);
+                }
+                mCommentAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onReplyClick(View view, int replyPositon, int commentPosition) {
                 Toast.makeText(CateDetailActivity.this, "comment " + commentPosition + " reply " + replyPositon + " clicked", Toast.LENGTH_SHORT).show();
                 // 添加reply
-                mCommentList.get(commentPosition).getCommentReplyList().add(new CommentReply("author C", "reply c"));
+                mCommentList.get(commentPosition).getCommentReplyList().add(replyPositon + 1, new CommentReply("author C", "reply c"));
                 // 刷新列表
                 mCommentAdapter.notifyDataSetChanged();
             }
