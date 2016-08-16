@@ -9,9 +9,11 @@ public class Comment extends BmobObject {
 
     private String content;
 
-    private MyUser user;//评论的用户
+    private MyUser author;//评论的用户
 
     private Post post; //所评论的帖子，这里体现的是一对多的关系，一个评论属于一个帖子
+
+    private Boolean hasReply;
 
     public String getContent() {
         return content;
@@ -21,8 +23,8 @@ public class Comment extends BmobObject {
         return post;
     }
 
-    public MyUser getUser() {
-        return user;
+    public MyUser getAuthor() {
+        return author;
     }
 
     public void setContent(String content) {
@@ -33,7 +35,15 @@ public class Comment extends BmobObject {
         this.post = post;
     }
 
-    public void setUser(MyUser user) {
-        this.user = user;
+    public void setAuthor(MyUser author) {
+        this.author = author;
+    }
+
+    public Boolean getHasReply() {
+        return hasReply;
+    }
+
+    public void setHasReply(Boolean hasReply) {
+        this.hasReply = hasReply;
     }
 }

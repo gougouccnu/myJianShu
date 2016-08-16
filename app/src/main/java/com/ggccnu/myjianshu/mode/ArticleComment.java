@@ -1,22 +1,16 @@
 package com.ggccnu.myjianshu.mode;
 
-import java.util.List;
-
 /**
- * Created by lishaowei on 16/8/12.
+ * Created by lishaowei on 16/8/13.
  */
 public class ArticleComment {
 
     private String comment;
 
-    private Boolean hasReply;
+    private String author;
 
-    private List<CommentReply>  commentReplyList;
-
-    public ArticleComment(String comment, List<CommentReply> commentReplyList, boolean hasReply) {
+    public ArticleComment(String author, String comment) {
         this.comment = comment;
-        this.commentReplyList = commentReplyList;
-        this.hasReply = hasReply;
     }
 
     public String getComment() {
@@ -27,19 +21,11 @@ public class ArticleComment {
         this.comment = comment;
     }
 
-    public List<CommentReply> getCommentReplyList() {
-        return commentReplyList;
+    public String getAuthor() {
+        return author;
     }
 
-    public boolean isHasReply() {
-        return hasReply;
-    }
-
-    public void setCommentReplyList(List<CommentReply> commentReplyList) {
-        this.commentReplyList = commentReplyList;
-    }
-
-    public void setHasReply(boolean hasReply) {
-        this.hasReply = hasReply;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }
