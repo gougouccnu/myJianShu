@@ -9,8 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ggccnu.myjianshu.R;
-import com.ggccnu.myjianshu.mode.ArticlePost;
 import com.ggccnu.myjianshu.mode.ArticleComment;
+import com.ggccnu.myjianshu.mode.ArticleReply;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +18,15 @@ import java.util.List;
 /**
  * Created by lishaowei on 16/6/4.
  */
-public class PostListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int COMMENT_WITH_REPLY = 1;
     private static final int COMMENT_COMMON = 2;
-    private List<ArticlePost> mPosttList = new ArrayList<ArticlePost>();
+    private List<ArticleComment> mArticleCommentList = new ArrayList<ArticleComment>();
     private Context mContext;
 
-    public PostListAdapter(List<ArticlePost> data, Context context) {
-        mPosttList = data;
+    public ArticleCommentListAdapter(List<ArticleComment> data, Context context) {
+        mArticleCommentList = data;
         mContext = context;
     }
 
@@ -48,12 +48,12 @@ public class PostListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof ReplyViewHolder) {
             ((ReplyViewHolder) holder).tv_comment_main.setText("common");
             // 找到reply,添加到comment下面
-            List<ArticleComment> articleCommentList = mPosttList.get(position).getArticleCommentList();
+            List<ArticleReply> articleReplyList = mArticleCommentList.get(position).getArticleReplyList();
             // 新增reply，notify datasetchanged后重绘列表前要remove掉原来的
             ((ReplyViewHolder) holder).parentLayout.removeAllViews();
-            for (int i = 0; i < articleCommentList.size(); i++) {
-                ArticleComment articleComment = articleCommentList.get(i);
-                ((ReplyViewHolder) holder).parentLayout.addView(addReplyView(articleComment.getAuthor(), articleComment.getComment()));
+            for (int i = 0; i < articleReplyList.size(); i++) {
+                ArticleReply articleReply = articleReplyList.get(i);
+                ((ReplyViewHolder) holder).parentLayout.addView(addReplyView(articleReply.getAuthor(), articleReply.getContent()));
             }
         } else if (holder instanceof CommonViewHolder) {
             ((CommonViewHolder) holder).tv_comment_main.setText("common");
@@ -102,7 +102,7 @@ public class PostListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mPosttList.size();
+        return mArticleCommentList.size();
     }
 
     public class ReplyViewHolder extends RecyclerView.ViewHolder {
@@ -155,15 +155,10 @@ public class PostListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     @Override
     public int getItemViewType(int position) {
-        if (mPosttList.get(position).isHasReply()) {
+        if (mArticleCommentList.get(position).isHasReply()) {
             return COMMENT_WITH_REPLY;
         } else {
             return COMMENT_COMMON;
         }
-    }
-    public void updateCommentList(ArrayList<ArticlePost> commentArrayList) {
-        mPosttList.clear();
-        mPosttList.addAll(commentArrayList);
-        notifyDataSetChanged();
     }
 }

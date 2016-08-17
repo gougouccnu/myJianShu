@@ -22,10 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ggccnu.myjianshu.R;
-import com.ggccnu.myjianshu.adapter.PostListAdapter;
+import com.ggccnu.myjianshu.adapter.ArticleCommentListAdapter;
 import com.ggccnu.myjianshu.mode.Article;
-import com.ggccnu.myjianshu.mode.ArticlePost;
 import com.ggccnu.myjianshu.mode.ArticleComment;
+import com.ggccnu.myjianshu.mode.ArticleReply;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -47,9 +47,11 @@ public class CateDetailActivity extends BaseActivity{
     private Button btn_donate;
 
     private RecyclerView rv_post;
-    private List<ArticlePost> mPostList = new ArrayList<>();
+    // 评论列表，数据从Bmob查询获得
+    private List<ArticleComment> mCommentList = new ArrayList<ArticleComment>();
     private RecyclerView.LayoutManager mLayoutManager;
-    private PostListAdapter mCommentAdapter;
+    // 评论列表适配器
+    private ArticleCommentListAdapter mCommentAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,33 +103,33 @@ public class CateDetailActivity extends BaseActivity{
         tv_donate_adv = (TextView) findViewById(R.id.tv_donate_adv);
         btn_donate = (Button) findViewById(R.id.btn_donate);
         rv_post = (RecyclerView) findViewById(R.id.rv_comment);
-
+        // 获取评论列表
         for (int i = 0; i<2; i++) {
-            mPostList.add(new ArticlePost("comment", null, false));
+            mCommentList.add(new ArticleComment("comment", null, false));
         }
-        final List<ArticleComment> articleCommentList = new ArrayList<>();
-        articleCommentList.add(new ArticleComment("author X", "reply"));
-        mPostList.add(new ArticlePost("comment", articleCommentList, true));
+        final List<ArticleReply> articleReplyList = new ArrayList<>();
+        articleReplyList.add(new ArticleReply("author X", "reply"));
+        mCommentList.add(new ArticleComment("comment", articleReplyList, true));
 
-        mCommentAdapter = new PostListAdapter(mPostList, this);
+        mCommentAdapter = new ArticleCommentListAdapter(mCommentList, this);
         rv_post.setAdapter(mCommentAdapter);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_post.setLayoutManager(mLayoutManager);
-        mCommentAdapter.setOnItemClickLitener(new PostListAdapter.OnItemClickLitener() {
+        mCommentAdapter.setOnItemClickLitener(new ArticleCommentListAdapter.OnItemClickLitener() {
             @Override
             public void onCommentClick(View view, int position) {
                 Toast.makeText(CateDetailActivity.this, "comment " + position + " clicked", Toast.LENGTH_SHORT).show();
                 // 带reply的帖子点击了主帖
-                if (mPostList.get(position).isHasReply()) {
+                if (mCommentList.get(position).isHasReply()) {
                     // reply add到最后
-                    mPostList.get(position).getArticleCommentList().add(new ArticleComment("author d", "append reply"));
+                    mCommentList.get(position).getArticleReplyList().add(new ArticleReply("author d", "append reply"));
                     mCommentAdapter.notifyDataSetChanged();
                 } else { // 给不带reply的帖子回复
-                    mPostList.get(position).setHasReply(true);
-                    List<ArticleComment> newReplyList = new ArrayList<ArticleComment>();
-                    newReplyList.add(new ArticleComment("author c", "reply c"));
+                    mCommentList.get(position).setHasReply(true);
+                    List<ArticleReply> newReplyList = new ArrayList<ArticleReply>();
+                    newReplyList.add(new ArticleReply("author c", "reply c"));
                     // 为comment添加reply
-                    mPostList.get(position).setArticleCommentList(newReplyList);
+                    mCommentList.get(position).setArticleReplyList(newReplyList);
                 }
                 mCommentAdapter.notifyDataSetChanged();
             }
@@ -136,7 +138,7 @@ public class CateDetailActivity extends BaseActivity{
             public void onReplyClick(View view, int replyPositon, int commentPosition) {
                 Toast.makeText(CateDetailActivity.this, "comment " + commentPosition + " reply " + replyPositon + " clicked", Toast.LENGTH_SHORT).show();
                 // 添加reply
-                mPostList.get(commentPosition).getArticleCommentList().add(replyPositon + 1, new ArticleComment("author C", "reply c"));
+                mCommentList.get(commentPosition).getArticleReplyList().add(replyPositon + 1, new ArticleReply("author C", "reply c"));
                 // 刷新列表
                 mCommentAdapter.notifyDataSetChanged();
             }
