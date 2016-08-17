@@ -46,7 +46,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ReplyViewHolder) {
-            ((ReplyViewHolder) holder).tv_comment_main.setText("common");
+            ((ReplyViewHolder) holder).tv_comment_main.setText(mArticleCommentList.get(position).getContent());
             // 找到reply,添加到comment下面
             List<ArticleReply> articleReplyList = mArticleCommentList.get(position).getArticleReplyList();
             // 新增reply，notify datasetchanged后重绘列表前要remove掉原来的
@@ -56,7 +56,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                 ((ReplyViewHolder) holder).parentLayout.addView(addReplyView(articleReply.getAuthor(), articleReply.getContent()));
             }
         } else if (holder instanceof CommonViewHolder) {
-            ((CommonViewHolder) holder).tv_comment_main.setText("common");
+            ((CommonViewHolder) holder).tv_comment_main.setText(mArticleCommentList.get(position).getContent());
         } else {
 
         }
@@ -95,7 +95,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_reply, null);
         TextView tv = (TextView) view.findViewById(R.id.tv_item_reply);
-        tv.setText("@" + "author A " + content);
+        tv.setText("@" + author + ":" + content);
         view.setLayoutParams(lp);
         return view;
     }

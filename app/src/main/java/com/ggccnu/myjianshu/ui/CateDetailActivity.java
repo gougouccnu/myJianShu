@@ -26,6 +26,10 @@ import com.ggccnu.myjianshu.adapter.ArticleCommentListAdapter;
 import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.mode.ArticleComment;
 import com.ggccnu.myjianshu.mode.ArticleReply;
+import com.ggccnu.myjianshu.mode.Comment;
+import com.ggccnu.myjianshu.mode.Post;
+import com.ggccnu.myjianshu.mode.Reply;
+import com.ggccnu.myjianshu.utils.DataAccessUtil;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -38,6 +42,8 @@ import java.util.List;
  */
 public class CateDetailActivity extends BaseActivity{
 
+    private static final int QUERY_COMMENT_MSG = 1;
+    private static final int QUERY_POST_MEG = 2;
     private ImageView iv_article_author_pic;
     private TextView tv_article_author;
     private TextView tv_article_time;
@@ -47,11 +53,15 @@ public class CateDetailActivity extends BaseActivity{
     private Button btn_donate;
 
     private RecyclerView rv_post;
+    // 原始数据
+    private List<Comment>  mCommentList = new ArrayList<Comment>();
+    private List<Reply>  mReplyList = new ArrayList<Reply>();
+
     // 评论列表，数据从Bmob查询获得
-    private List<ArticleComment> mCommentList = new ArrayList<ArticleComment>();
+    private List<ArticleComment> mArticleCommentList = new ArrayList<ArticleComment>();
     private RecyclerView.LayoutManager mLayoutManager;
     // 评论列表适配器
-    private ArticleCommentListAdapter mCommentAdapter;
+    private ArticleCommentListAdapter mArticleCommentAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,46 +113,71 @@ public class CateDetailActivity extends BaseActivity{
         tv_donate_adv = (TextView) findViewById(R.id.tv_donate_adv);
         btn_donate = (Button) findViewById(R.id.btn_donate);
         rv_post = (RecyclerView) findViewById(R.id.rv_comment);
-        // 获取评论列表
-        for (int i = 0; i<2; i++) {
-            mCommentList.add(new ArticleComment("comment", null, false));
-        }
-        final List<ArticleReply> articleReplyList = new ArrayList<>();
-        articleReplyList.add(new ArticleReply("author X", "reply"));
-        mCommentList.add(new ArticleComment("comment", articleReplyList, true));
 
-        mCommentAdapter = new ArticleCommentListAdapter(mCommentList, this);
-        rv_post.setAdapter(mCommentAdapter);
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        rv_post.setLayoutManager(mLayoutManager);
-        mCommentAdapter.setOnItemClickLitener(new ArticleCommentListAdapter.OnItemClickLitener() {
+
+        Handler mHandler = new Handler() {
             @Override
-            public void onCommentClick(View view, int position) {
-                Toast.makeText(CateDetailActivity.this, "comment " + position + " clicked", Toast.LENGTH_SHORT).show();
-                // 带reply的帖子点击了主帖
-                if (mCommentList.get(position).isHasReply()) {
-                    // reply add到最后
-                    mCommentList.get(position).getArticleReplyList().add(new ArticleReply("author d", "append reply"));
-                    mCommentAdapter.notifyDataSetChanged();
-                } else { // 给不带reply的帖子回复
-                    mCommentList.get(position).setHasReply(true);
-                    List<ArticleReply> newReplyList = new ArrayList<ArticleReply>();
-                    newReplyList.add(new ArticleReply("author c", "reply c"));
-                    // 为comment添加reply
-                    mCommentList.get(position).setArticleReplyList(newReplyList);
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case QUERY_COMMENT_MSG:
+                        mCommentList.addAll((ArrayList<Comment>)msg.obj);
+                        // 获取评论列表
+                        for (int i = 0; i < mCommentList.size(); i++) {
+                            if (mCommentList.get(i).getHasReply()) {
+                                final List<ArticleReply> articleReplyList = new ArrayList<>();
+                                // 查询到对于的reply list
+                                articleReplyList.add(new ArticleReply("author X", "reply"));
+                                mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getContent(), articleReplyList, true));
+                            } else {
+                                mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getContent(), null, false));
+                            }
+                        }
+                        mArticleCommentAdapter = new ArticleCommentListAdapter(mArticleCommentList, CateDetailActivity.this);
+                        rv_post.setAdapter(mArticleCommentAdapter);
+                        mLayoutManager = new LinearLayoutManager(CateDetailActivity.this, LinearLayoutManager.VERTICAL, false);
+                        rv_post.setLayoutManager(mLayoutManager);
+                        mArticleCommentAdapter.setOnItemClickLitener(new ArticleCommentListAdapter.OnItemClickLitener() {
+                            @Override
+                            public void onCommentClick(View view, int position) {
+                                Toast.makeText(CateDetailActivity.this, "comment " + position + " clicked", Toast.LENGTH_SHORT).show();
+                                // 带reply的帖子点击了主帖
+                                if (mArticleCommentList.get(position).isHasReply()) {
+                                    // reply add到最后
+                                    mArticleCommentList.get(position).getArticleReplyList().add(new ArticleReply("author d", "append reply"));
+                                    mArticleCommentAdapter.notifyDataSetChanged();
+                                } else { // 给不带reply的帖子回复
+                                    mArticleCommentList.get(position).setHasReply(true);
+                                    List<ArticleReply> newReplyList = new ArrayList<ArticleReply>();
+                                    newReplyList.add(new ArticleReply("author c", "reply c"));
+                                    // 为comment添加reply
+                                    mArticleCommentList.get(position).setArticleReplyList(newReplyList);
+                                }
+                                mArticleCommentAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onReplyClick(View view, int replyPositon, int commentPosition) {
+                                Toast.makeText(CateDetailActivity.this, "comment " + commentPosition + " reply " + replyPositon + " clicked", Toast.LENGTH_SHORT).show();
+                                // 添加reply
+                                mArticleCommentList.get(commentPosition).getArticleReplyList().add(replyPositon + 1, new ArticleReply("author C", "reply c"));
+                                // 刷新列表
+                                mArticleCommentAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        break;
+                    case QUERY_POST_MEG:
+
+                        break;
+                    default:
+                        break;
                 }
-                mCommentAdapter.notifyDataSetChanged();
             }
+        };
 
-            @Override
-            public void onReplyClick(View view, int replyPositon, int commentPosition) {
-                Toast.makeText(CateDetailActivity.this, "comment " + commentPosition + " reply " + replyPositon + " clicked", Toast.LENGTH_SHORT).show();
-                // 添加reply
-                mCommentList.get(commentPosition).getArticleReplyList().add(replyPositon + 1, new ArticleReply("author C", "reply c"));
-                // 刷新列表
-                mCommentAdapter.notifyDataSetChanged();
-            }
-        });
+        Post post = new Post();
+        post.setObjectId("tCEkMMMh");
+        DataAccessUtil.queryComment(this, post, mHandler, QUERY_COMMENT_MSG);
+
         //在消息队列中实现对控件的更改
         final Handler handle = new Handler() {
             public void handleMessage(Message msg) {

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Window;
 
 import com.ggccnu.myjianshu.R;
@@ -13,7 +12,7 @@ import com.ggccnu.myjianshu.mode.Category;
 import com.ggccnu.myjianshu.mode.Comment;
 import com.ggccnu.myjianshu.mode.MyUser;
 import com.ggccnu.myjianshu.mode.Post;
-import com.ggccnu.myjianshu.mode.Reply;
+import com.ggccnu.myjianshu.utils.DataAccessUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,6 +29,8 @@ import cn.bmob.v3.update.BmobUpdateAgent;
 public class SplashActivity extends Activity {
     private static final String TAG = "SplashActivity";
     private static final int QUERY_COMMENT_SUCCESS = 1;
+    private static final int QUERY_REPLY_SUCCESS = 2;
+    private static final int QUERY_POST_MEG = 3;
 
     private Handler mHandler;
 
@@ -42,28 +43,33 @@ public class SplashActivity extends Activity {
         Bmob.initialize(this, "ca3f68beaf133e348d60dcbd5f63d20c");
         BmobUpdateAgent.update(this);
 
-        // mode test
-        MyUser currentUsr = new MyUser();
-        currentUsr.setObjectId("misb0004");
-        queryPost(currentUsr);
-
-        Post post = new Post();
-        post.setObjectId("tCEkMMMh");
-        queryComment(post);
-
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what == QUERY_COMMENT_SUCCESS) {
-                    Comment comment = new Comment();
-                    comment.setObjectId("Tvl1IIIJ");
-                    queryReply(((List<Comment>) msg.obj).get(1));
+                switch (msg.what) {
+                    case QUERY_COMMENT_SUCCESS:
+                        Comment comment = new Comment();
+                        comment.setObjectId("Tvl1IIIJ");
+                        DataAccessUtil.queryReply(SplashActivity.this, ((List<Comment>) msg.obj).get(1), mHandler,QUERY_REPLY_SUCCESS);
+                        break;
+                    case QUERY_POST_MEG:
+
+                        break;
+                    default:
+                        break;
                 }
             }
         };
-//
 
+        // mode test
+        MyUser currentUsr = new MyUser();
+        currentUsr.setObjectId("misb0004");
+        DataAccessUtil.queryPost(this, currentUsr, mHandler,QUERY_POST_MEG);
 
+        Post post = new Post();
+        post.setObjectId("tCEkMMMh");
+        DataAccessUtil.queryComment(this, post, mHandler, QUERY_COMMENT_SUCCESS);
+        
         queryCategory();
 
     }
@@ -92,10 +98,8 @@ public class SplashActivity extends Activity {
             }
         });
     }
-
-    private List<Post> queryPost(MyUser user) {
-
-        final List<Post> returnPostList = new ArrayList<Post>();
+/*
+    private void queryPost(MyUser user, final Handler mHandler, final int msgWhat) {
 
         BmobQuery<Post> query = new BmobQuery<Post>();
         query.addWhereEqualTo("author", user);
@@ -108,15 +112,15 @@ public class SplashActivity extends Activity {
 
             @Override
             public void onSuccess(List<Post> list) {
-                returnPostList.addAll(list);
+                Message msg = new Message();
+                msg.what = msgWhat;
+                msg.obj = list;
+                mHandler.sendMessage(msg);
             }
         });
-        return returnPostList;
     }
 
-    private List<Comment> queryComment(Post post) {
-
-        final List<Comment> returnCommentList = new ArrayList<Comment>();
+    private void queryComment(Post post, final Handler mHandler, final int msgWhat) {
 
         BmobQuery<Comment> query = new BmobQuery<Comment>();
         query.addWhereEqualTo("post", post);
@@ -129,19 +133,15 @@ public class SplashActivity extends Activity {
 
             @Override
             public void onSuccess(List<Comment> list) {
-                returnCommentList.addAll(list);
                 Message msg = new Message();
-                msg.what = QUERY_COMMENT_SUCCESS;
-                msg.obj = returnCommentList;
+                msg.what = msgWhat;
+                msg.obj = list;
                 mHandler.sendMessage(msg);
             }
         });
-        return returnCommentList;
     }
 
-    private List<Reply> queryReply(Comment comment) {
-
-        final List<Reply> returnReplyList = new ArrayList<Reply>();
+    private void queryReply(Comment comment, final Handler mHandler, final int msgWhat) {
 
         BmobQuery<Reply> query = new BmobQuery<Reply>();
         query.addWhereEqualTo("comment", comment);
@@ -149,7 +149,10 @@ public class SplashActivity extends Activity {
         query.findObjects(this, new FindListener<Reply>() {
             @Override
             public void onSuccess(List<Reply> list) {
-                returnReplyList.addAll(list);
+                Message msg = new Message();
+                msg.what = msgWhat;
+                msg.obj = list;
+                mHandler.sendMessage(msg);
             }
 
             @Override
@@ -157,6 +160,7 @@ public class SplashActivity extends Activity {
                 Log.d(TAG, "queryReply err: " + s);
             }
         });
-        return returnReplyList;
     }
+
+    */
 }
