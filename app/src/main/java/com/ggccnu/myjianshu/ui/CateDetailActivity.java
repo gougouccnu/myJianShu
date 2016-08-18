@@ -121,6 +121,8 @@ public class CateDetailActivity extends BaseActivity{
                 switch (msg.what) {
                     case QUERY_COMMENT_MSG:
                         mCommentList.addAll((ArrayList<Comment>)msg.obj);
+                        // add header null data
+                        mArticleCommentList.add(new ArticleComment("header", null, false));
                         // 获取评论列表
                         for (int i = 0; i < mCommentList.size(); i++) {
                             if (mCommentList.get(i).getHasReply()) {
