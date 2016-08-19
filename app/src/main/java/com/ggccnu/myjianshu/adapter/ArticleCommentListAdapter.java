@@ -1,7 +1,11 @@
 package com.ggccnu.myjianshu.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.ArticleComment;
 import com.ggccnu.myjianshu.mode.ArticleReply;
+import com.ggccnu.myjianshu.widget.MyClickText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +126,15 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_reply, null);
         TextView tv = (TextView) view.findViewById(R.id.tv_item_reply);
-        tv.setText("@" + author + ":" + content);
+        //tv.setText("@" + author + ":" + content);
+        // 帖子作者名称可点击
+        SpannableString str = new SpannableString("超文本：http://www.baidu.com");
+        str.setSpan(new MyClickText(mContext),4,str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //当然这里也可以通过setSpan来设置哪些位置的文本哪些颜色
+        tv.setText(str);
+        tv.setMovementMethod(LinkMovementMethod.getInstance());//不设置 没有点击事件
+        tv.setHighlightColor(Color.TRANSPARENT); //设置点击后的颜色为透明
+
         view.setLayoutParams(lp);
         return view;
     }

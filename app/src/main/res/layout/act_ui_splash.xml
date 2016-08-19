@@ -6,7 +6,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome"
+        android:text="&lt;b>Text&lt;/b> which contains one &lt;a href=&apos;#&apos;>link&lt;/a> and another &lt;a href=&apos;#&apos;>link&lt;/a>"
         android:id="@+id/tvSplash"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:clickable="true" />
 </LinearLayout>

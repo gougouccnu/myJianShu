@@ -53,11 +53,11 @@ public class CateDetailActivity extends BaseActivity{
     private Button btn_donate;
 
     private RecyclerView rv_post;
-    // 原始数据
+    // Bmob原始数据
     private List<Comment>  mCommentList = new ArrayList<Comment>();
     private List<Reply>  mReplyList = new ArrayList<Reply>();
 
-    // 评论列表，数据从Bmob查询获得
+    // 评论列表，数据从Bmob原始数据获得
     private List<ArticleComment> mArticleCommentList = new ArrayList<ArticleComment>();
     private RecyclerView.LayoutManager mLayoutManager;
     // 评论列表适配器
