@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,7 +69,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
             }
         } else if (holder instanceof CommonViewHolder) {
             ((CommonViewHolder) holder).tv_comment_main.setText(mArticleCommentList.get(position).getContent());
-        } else if (holder instanceof HeaderViewHolder) {
+    /*    } else if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).btn_display_author.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -80,7 +81,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View view) {
                     Toast.makeText(mContext, "sort time btn clicked", Toast.LENGTH_SHORT).show();
                 }
-            });
+            });  */
         } else {
 
         }
@@ -95,6 +96,13 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                         mOnItemClickLitener.onCommentClick(holder.itemView, pos);
                     }
                 });
+                ((CommonViewHolder) holder).imgBtnReply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = holder.getLayoutPosition();
+                        mOnItemClickLitener.onCommentBtnReplyClick(holder.itemView, pos);
+                    }
+                });
             }
             // 回复点击事件
             if (holder instanceof ReplyViewHolder) {
@@ -103,6 +111,13 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(mContext, "replyview main comment clicked", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                ((ReplyViewHolder) holder).img_btn_quick_reply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = holder.getLayoutPosition();
+                        mOnItemClickLitener.onReplyQuikClick(holder.itemView, pos);
                     }
                 });
                 for (int i = 0; i < ((ReplyViewHolder) holder).parentLayout.getChildCount(); i++) {
@@ -114,6 +129,21 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                         }
                     });
                 }
+            }
+            // header按钮时间回调
+            if (holder instanceof HeaderViewHolder) {
+                ((HeaderViewHolder) holder).btn_display_author.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mOnItemClickLitener.onHeaderDisplayAuthorClick();
+                    }
+                });
+                ((HeaderViewHolder) holder).btn_sort_time.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mOnItemClickLitener.onHeaderSortTimeClick();
+                    }
+                });
             }
         }
     }
@@ -147,11 +177,13 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     public class ReplyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_comment_main;
+        public ImageButton img_btn_quick_reply;
         public LinearLayout parentLayout;
 
         public ReplyViewHolder(View itemView) {
             super(itemView);
             tv_comment_main = (TextView) itemView.findViewById(R.id.tv_comment_main);
+            img_btn_quick_reply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
             parentLayout = (LinearLayout) itemView.findViewById(R.id.linearlayout_reply);
         }
 
@@ -161,9 +193,12 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
 
         public TextView tv_comment_main;
 
+        public ImageButton imgBtnReply;
+
         public CommonViewHolder(View itemView) {
             super(itemView);
             tv_comment_main = (TextView) itemView.findViewById(R.id.tv_comment_main);
+            imgBtnReply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
         }
     }
 
@@ -184,7 +219,16 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     public interface OnItemClickLitener
     {
         void onCommentClick(View view, int position);
+
         void onReplyClick(View view, int replyPosition, int commentPosition);
+
+        void onHeaderDisplayAuthorClick();
+
+        void onHeaderSortTimeClick();
+
+        void onCommentBtnReplyClick(View view, int position);
+
+        void onReplyQuikClick(View itemView, int pos);
     }
 
     private OnItemClickLitener mOnItemClickLitener;

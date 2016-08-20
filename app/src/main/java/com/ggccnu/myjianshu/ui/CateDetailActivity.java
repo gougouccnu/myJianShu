@@ -158,12 +158,32 @@ public class CateDetailActivity extends BaseActivity{
                             }
 
                             @Override
+                            public void onCommentBtnReplyClick(View view, int position) {
+                                Toast.makeText(CateDetailActivity.this, "onCommentBtnReplyClick", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
                             public void onReplyClick(View view, int replyPositon, int commentPosition) {
                                 Toast.makeText(CateDetailActivity.this, "comment " + commentPosition + " reply " + replyPositon + " clicked", Toast.LENGTH_SHORT).show();
                                 // 添加reply
                                 mArticleCommentList.get(commentPosition).getArticleReplyList().add(replyPositon + 1, new ArticleReply("author C", "reply c"));
                                 // 刷新列表
                                 mArticleCommentAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onReplyQuikClick(View itemView, int pos) {
+                                Toast.makeText(CateDetailActivity.this, "onReplyQuikClick", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onHeaderDisplayAuthorClick() {
+                                Toast.makeText(CateDetailActivity.this, "onHeaderDisplayAuthorClick displayed", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onHeaderSortTimeClick() {
+                                Toast.makeText(CateDetailActivity.this, "onHeaderSortTimeClick displayed", Toast.LENGTH_SHORT).show();
                             }
                         });
                         break;
