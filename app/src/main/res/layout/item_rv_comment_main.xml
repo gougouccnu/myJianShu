@@ -9,43 +9,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ibtn_author" />
+        <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/iv_author_pic"
+            android:scaleType="fitCenter"
+            app:riv_corner_radius="30dip"
+            app:riv_mutate_background="true"
+            app:riv_tile_mode="repeat"
+            app:riv_oval="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/icon_sns_qq" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/ibtn_author">
+            android:layout_toRightOf="@+id/iv_author_pic"
+            android:layout_marginTop="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="韦小路"
                 android:id="@+id/tv_author"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal|left"
+                android:textSize="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2楼.08.20.03"
                 android:id="@+id/tv_comment_floor_time"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal|left"
+                android:textSize="10dp" />
         </LinearLayout>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/img_btn_reply"
-            android:layout_toLeftOf="@+id/img_btn_like" />
+            android:layout_toLeftOf="@+id/img_btn_like"
+            android:background="@drawable/hot_icon_pinglun_night"
+            android:layout_alignParentTop="false"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/img_btn_like"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/hot_icon_like_night"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
     <TextView
@@ -53,6 +72,8 @@
         android:layout_height="wrap_content"
         android:text="main content"
         android:id="@+id/tv_comment_main"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal|left"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>

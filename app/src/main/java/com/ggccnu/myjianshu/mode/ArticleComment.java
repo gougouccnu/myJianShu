@@ -7,13 +7,16 @@ import java.util.List;
  */
 public class ArticleComment {
 
+    private String author;
+
     private String content;
 
     private Boolean hasReply;
 
     private List<ArticleReply> articleReplyList;
 
-    public ArticleComment(String comment, List<ArticleReply> articleReplyList, Boolean hasReply) {
+    public ArticleComment(String author, String comment, List<ArticleReply> articleReplyList, Boolean hasReply) {
+        this.author = author;
         this.content = comment;
         this.articleReplyList = articleReplyList;
         this.hasReply = hasReply;
@@ -41,5 +44,13 @@ public class ArticleComment {
 
     public void setHasReply(boolean hasReply) {
         this.hasReply = hasReply;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

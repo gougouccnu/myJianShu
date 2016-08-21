@@ -4,15 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Window;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.Category;
-import com.ggccnu.myjianshu.mode.Comment;
-import com.ggccnu.myjianshu.mode.MyUser;
-import com.ggccnu.myjianshu.mode.Post;
-import com.ggccnu.myjianshu.utils.DataAccessUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,33 +38,6 @@ public class SplashActivity extends Activity {
         Bmob.initialize(this, "ca3f68beaf133e348d60dcbd5f63d20c");
         BmobUpdateAgent.update(this);
 
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case QUERY_COMMENT_SUCCESS:
-                        Comment comment = new Comment();
-                        comment.setObjectId("Tvl1IIIJ");
-                        DataAccessUtil.queryReply(SplashActivity.this, ((List<Comment>) msg.obj).get(1), mHandler,QUERY_REPLY_SUCCESS);
-                        break;
-                    case QUERY_POST_MEG:
-
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-
-        // mode test
-        MyUser currentUsr = new MyUser();
-        currentUsr.setObjectId("misb0004");
-        DataAccessUtil.queryPost(this, currentUsr, mHandler,QUERY_POST_MEG);
-
-        Post post = new Post();
-        post.setObjectId("tCEkMMMh");
-        DataAccessUtil.queryComment(this, post, mHandler, QUERY_COMMENT_SUCCESS);
-        
         queryCategory();
 
     }

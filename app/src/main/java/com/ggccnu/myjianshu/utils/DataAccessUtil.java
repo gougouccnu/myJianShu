@@ -10,6 +10,7 @@ import com.ggccnu.myjianshu.mode.MyUser;
 import com.ggccnu.myjianshu.mode.Post;
 import com.ggccnu.myjianshu.mode.Reply;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -43,6 +44,7 @@ public class DataAccessUtil {
 
     public static void queryComment(final Context context, Post post, final Handler mHandler, final int msgWhat) {
 
+        final List<Comment> mCommentList = new ArrayList<Comment>();
         BmobQuery<Comment> query = new BmobQuery<Comment>();
         query.addWhereEqualTo("post", post);
         query.include("author,post,reply");
@@ -54,15 +56,21 @@ public class DataAccessUtil {
 
             @Override
             public void onSuccess(List<Comment> list) {
-                Message msg = new Message();
-                msg.what = msgWhat;
-                msg.obj = list;
-                mHandler.sendMessage(msg);
+                mCommentList.addAll(list);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Message msg = new Message();
+                        msg.what = msgWhat;
+                        msg.obj = mCommentList;
+                        mHandler.sendMessage(msg);
+                    }
+                }).start();
             }
         });
     }
 
-    public static void queryReply(final Context context, Comment comment, final Handler mHandler, final int msgWhat) {
+    public static void queryReply(final Context context, Comment comment, final QueryReplyCallbackListener listener) {
 
         BmobQuery<Reply> query = new BmobQuery<Reply>();
         query.addWhereEqualTo("comment", comment);
@@ -70,16 +78,20 @@ public class DataAccessUtil {
         query.findObjects(context, new FindListener<Reply>() {
             @Override
             public void onSuccess(List<Reply> list) {
-                Message msg = new Message();
-                msg.what = msgWhat;
-                msg.obj = list;
-                mHandler.sendMessage(msg);
+                listener.onFinish(list);
             }
 
             @Override
             public void onError(int i, String s) {
                 Log.d(context.getPackageName(), "queryReply err: " + s);
+                listener.onError(s);
             }
         });
+    }
+
+    public interface QueryReplyCallbackListener {
+
+        void onFinish(List<Reply> list);
+        void onError(String s);
     }
 }

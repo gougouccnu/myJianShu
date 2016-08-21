@@ -19,6 +19,7 @@ import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.ArticleComment;
 import com.ggccnu.myjianshu.mode.ArticleReply;
 import com.ggccnu.myjianshu.widget.MyClickText;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +65,14 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
             // 新增reply，notify datasetchanged后重绘列表前要remove掉原来的
             ((ReplyViewHolder) holder).parentLayout.removeAllViews();
             for (int i = 0; i < articleReplyList.size(); i++) {
+                String replyedAuthor;
                 ArticleReply articleReply = articleReplyList.get(i);
-                ((ReplyViewHolder) holder).parentLayout.addView(addReplyView(articleReply.getAuthor(), articleReply.getContent()));
+                if (i==0) {
+                    replyedAuthor = mArticleCommentList.get(position).getAuthor();
+                } else {
+                    replyedAuthor = articleReplyList.get(i-1).getAuthor();
+                }
+                ((ReplyViewHolder) holder).parentLayout.addView(addReplyView(replyedAuthor, articleReply.getAuthor(), articleReply.getContent()));
             }
         } else if (holder instanceof CommonViewHolder) {
             ((CommonViewHolder) holder).tv_comment_main.setText(mArticleCommentList.get(position).getContent());
@@ -96,7 +103,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                         mOnItemClickLitener.onCommentClick(holder.itemView, pos);
                     }
                 });
-                ((CommonViewHolder) holder).imgBtnReply.setOnClickListener(new View.OnClickListener() {
+                ((CommonViewHolder) holder).iv_author_pic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         int pos = holder.getLayoutPosition();
@@ -113,7 +120,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                         Toast.makeText(mContext, "replyview main comment clicked", Toast.LENGTH_SHORT).show();
                     }
                 });
-                ((ReplyViewHolder) holder).img_btn_quick_reply.setOnClickListener(new View.OnClickListener() {
+                ((ReplyViewHolder) holder).img_btn_reply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         int pos = holder.getLayoutPosition();
@@ -148,7 +155,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    private View addReplyView(String author, String content) {
+    private View addReplyView(String replyedAuthor, String author, String content) {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -158,8 +165,9 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
         TextView tv = (TextView) view.findViewById(R.id.tv_item_reply);
         //tv.setText("@" + author + ":" + content);
         // 帖子作者名称可点击
-        SpannableString str = new SpannableString("超文本：http://www.baidu.com");
-        str.setSpan(new MyClickText(mContext),4,str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        SpannableString str = new SpannableString(author + ":" + "@" + replyedAuthor + content);
+        str.setSpan(new MyClickText(mContext),0,author.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        str.setSpan(new MyClickText(mContext),author.length() + 1,author.length() + 2 + replyedAuthor.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //当然这里也可以通过setSpan来设置哪些位置的文本哪些颜色
         tv.setText(str);
         tv.setMovementMethod(LinkMovementMethod.getInstance());//不设置 没有点击事件
@@ -177,13 +185,13 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     public class ReplyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_comment_main;
-        public ImageButton img_btn_quick_reply;
+        public ImageButton img_btn_reply;
         public LinearLayout parentLayout;
 
         public ReplyViewHolder(View itemView) {
             super(itemView);
             tv_comment_main = (TextView) itemView.findViewById(R.id.tv_comment_main);
-            img_btn_quick_reply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
+            img_btn_reply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
             parentLayout = (LinearLayout) itemView.findViewById(R.id.linearlayout_reply);
         }
 
@@ -192,13 +200,15 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     public class CommonViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_comment_main;
+        public ImageButton img_btn_reply;
 
-        public ImageButton imgBtnReply;
+        public RoundedImageView iv_author_pic;
 
         public CommonViewHolder(View itemView) {
             super(itemView);
             tv_comment_main = (TextView) itemView.findViewById(R.id.tv_comment_main);
-            imgBtnReply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
+            img_btn_reply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
+            iv_author_pic = (RoundedImageView) itemView.findViewById(R.id.iv_author_pic);
         }
     }
 
