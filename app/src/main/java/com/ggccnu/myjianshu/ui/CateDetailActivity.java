@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import com.ggccnu.myjianshu.mode.Comment;
 import com.ggccnu.myjianshu.mode.Post;
 import com.ggccnu.myjianshu.mode.Reply;
 import com.ggccnu.myjianshu.utils.DataAccessUtil;
+import com.ggccnu.myjianshu.widget.MyDecoration;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -45,6 +47,7 @@ public class CateDetailActivity extends BaseActivity{
     private static final int QUERY_COMMENT_MSG = 1;
     private static final int QUERY_POST_MEG = 2;
     private static final int QUERY_REPLY_MSG = 3;
+    private static final String TAG = "CateDetailActivity";
     private ImageView iv_article_author_pic;
     private TextView tv_article_author;
     private TextView tv_article_time;
@@ -97,9 +100,7 @@ public class CateDetailActivity extends BaseActivity{
 
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        view.loadUrl("javascript:(function() { " +
-                                "document.getElementsByTagName('header')[0].style.display=\"none\"; " +
-                                "})()");
+                        view.loadUrl("javascript:document.getElementsById('comments').style.display='none';");
                     }
 
                     @Override
@@ -110,7 +111,7 @@ public class CateDetailActivity extends BaseActivity{
                 }
 
         );
-        wv_article_content.loadUrl("http://www.jianshu.com/p/76e27f23e071");
+        //wv_article_content.loadUrl("http://www.jianshu.com/p/76e27f23e071");
         tv_donate_adv = (TextView) findViewById(R.id.tv_donate_adv);
         btn_donate = (Button) findViewById(R.id.btn_donate);
         rv_post = (RecyclerView) findViewById(R.id.rv_comment);
@@ -136,11 +137,13 @@ public class CateDetailActivity extends BaseActivity{
                                     @Override
                                     public void onFinish(List<Reply> list) {
                                         mReplyList.addAll(list);
-                                        for (int i = 0; i < mReplyList.size(); i++) {
-                                            articleReplyList.add(new ArticleReply(mReplyList.get(i).getAuthor().getUsername(), mReplyList.get(i).getContent()));
-                                        }
-                                        //articleReplyList.add(new ArticleReply("author X", "reply"));
-                                        mArticleCommentList.add(new ArticleComment(currentComment.getAuthor().getUsername(), currentComment.getContent(), articleReplyList, true));
+
+                                                for (int i = 0; i < mReplyList.size(); i++) {
+                                                    articleReplyList.add(new ArticleReply(mReplyList.get(i).getAuthor().getUsername(), mReplyList.get(i).getContent()));
+                                                }
+                                                //articleReplyList.add(new ArticleReply("author X", "reply"));
+                                                mArticleCommentList.add(new ArticleComment(currentComment.getAuthor().getUsername(), currentComment.getContent(), articleReplyList, true));
+
                                     }
 
                                     @Override
@@ -149,17 +152,17 @@ public class CateDetailActivity extends BaseActivity{
                                     }
                                 });
                             } else {
+                                Log.d(TAG, "add comment article");
                                 mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getAuthor().getUsername(), mCommentList.get(i).getContent(), null, false));
                             }
                         }
-                        //
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+
+                                Log.d(TAG, "set comment adapter");
                                 mArticleCommentAdapter = new ArticleCommentListAdapter(mArticleCommentList, CateDetailActivity.this);
                                 rv_post.setAdapter(mArticleCommentAdapter);
                                 mLayoutManager = new LinearLayoutManager(CateDetailActivity.this, LinearLayoutManager.VERTICAL, false);
                                 rv_post.setLayoutManager(mLayoutManager);
+                                rv_post.addItemDecoration(new MyDecoration(CateDetailActivity.this, MyDecoration.VERTICAL_LIST));
                                 mArticleCommentAdapter.setOnItemClickLitener(new ArticleCommentListAdapter.OnItemClickLitener() {
                                     @Override
                                     public void onCommentClick(View view, int position) {
@@ -208,8 +211,6 @@ public class CateDetailActivity extends BaseActivity{
                                         Toast.makeText(CateDetailActivity.this, "onHeaderSortTimeClick displayed", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                            }
-                        });
                         break;
                     case QUERY_POST_MEG:
 

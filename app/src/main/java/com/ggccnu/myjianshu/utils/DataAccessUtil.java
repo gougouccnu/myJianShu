@@ -57,15 +57,10 @@ public class DataAccessUtil {
             @Override
             public void onSuccess(List<Comment> list) {
                 mCommentList.addAll(list);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Message msg = new Message();
-                        msg.what = msgWhat;
-                        msg.obj = mCommentList;
-                        mHandler.sendMessage(msg);
-                    }
-                }).start();
+                Message msg = new Message();
+                msg.what = msgWhat;
+                msg.obj = mCommentList;
+                mHandler.sendMessage(msg);
             }
         });
     }
@@ -78,6 +73,7 @@ public class DataAccessUtil {
         query.findObjects(context, new FindListener<Reply>() {
             @Override
             public void onSuccess(List<Reply> list) {
+                Log.d(context.getPackageName(), "queryReply success");
                 listener.onFinish(list);
             }
 
