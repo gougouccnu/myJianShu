@@ -32,6 +32,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int COMMENT_WITH_REPLY = 1;
     private static final int COMMENT_COMMON = 2;
     private static final int COMMENT_HEADER = 3;
+    private static final int COMMENT_END = 4;
     private List<ArticleComment> mArticleCommentList = new ArrayList<ArticleComment>();
     private Context mContext;
 
@@ -51,6 +52,9 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (viewType == COMMENT_HEADER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_comment_header, parent, false);
             return new HeaderViewHolder(v);
+        } else if (viewType == COMMENT_END) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_comment_end, parent, false);
+            return new EnderViewHolder(v);
         } else {
             return null;
         }
@@ -179,7 +183,8 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemCount() {
-        return mArticleCommentList.size();
+        // 加上ender
+        return mArticleCommentList.size() + 1;
     }
 
     public class ReplyViewHolder extends RecyclerView.ViewHolder {
@@ -226,6 +231,16 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    public class EnderViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView tv_end;
+
+        public EnderViewHolder(View itemView) {
+            super(itemView);
+            tv_end = (TextView) itemView.findViewById(R.id.tv_end);
+        }
+    }
+
     public interface OnItemClickLitener
     {
         void onCommentClick(View view, int position);
@@ -265,6 +280,8 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
         // listview header
         if (position == 0) {
             return COMMENT_HEADER;
+        } else if (position == mArticleCommentList.size()) {
+            return COMMENT_END;
         } else {
             if (mArticleCommentList.get(position).isHasReply()) {
                 return COMMENT_WITH_REPLY;
