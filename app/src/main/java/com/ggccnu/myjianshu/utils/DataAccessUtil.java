@@ -21,6 +21,8 @@ import cn.bmob.v3.listener.FindListener;
  */
 public class DataAccessUtil {
 
+    private static final String TAG = "DataAccessUtil";
+
     public static void queryPost(final Context context, MyUser user, final Handler mHandler, final int msgWhat) {
 
         BmobQuery<Post> query = new BmobQuery<Post>();
@@ -51,7 +53,7 @@ public class DataAccessUtil {
         query.findObjects(context, new FindListener<Comment>() {
             @Override
             public void onError(int i, String s) {
-                Log.d(context.getPackageName(), "queryPost err: " + s);
+                Log.d(TAG, "queryPost err: " + s);
             }
 
             @Override
@@ -73,13 +75,13 @@ public class DataAccessUtil {
         query.findObjects(context, new FindListener<Reply>() {
             @Override
             public void onSuccess(List<Reply> list) {
-                Log.d(context.getPackageName(), "queryReply success");
+                Log.d(TAG, "queryReply success");
                 listener.onFinish(list);
             }
 
             @Override
             public void onError(int i, String s) {
-                Log.d(context.getPackageName(), "queryReply err: " + s);
+                Log.d(TAG, "queryReply err: " + s);
                 listener.onError(s);
             }
         });
