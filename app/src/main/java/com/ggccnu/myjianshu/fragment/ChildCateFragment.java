@@ -115,6 +115,7 @@ public class ChildCateFragment extends Fragment {
             @Override
             public void onSuccess(List<Article> list) {
                 if (list != null && list.size() > 0) {
+                    mArticleList.clear();
                     mArticleList.addAll(list);
                     //Log.d(TAG, "queryArticles onSuccess");
                     new Thread(new Runnable() {

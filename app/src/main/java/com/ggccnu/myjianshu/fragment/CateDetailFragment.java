@@ -209,6 +209,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
             @Override
             public void onSuccess(List<Article> list) {
                 if (list != null && list.size() > 0) {
+                    mArticleList.clear();
                     mArticleList.addAll(list);
                     new Thread(new Runnable() {
                         @Override
@@ -268,6 +269,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
             @Override
             public void onSuccess(List<Article> list) {
                 if (list != null && list.size() > 0) {
+                    mArticleList.clear();
                     mArticleList.addAll(list);
                     new Thread(new Runnable() {
                         @Override
