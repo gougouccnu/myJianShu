@@ -7,43 +7,73 @@ import cn.bmob.v3.BmobObject;
  */
 public class Comment extends BmobObject {
 
-    private String content;
-
-    private MyUser author;//评论的用户
-
-    private Post post; //所评论的帖子，这里体现的是一对多的关系，一个评论属于一个帖子
+    private String commentId;
 
     private Boolean hasReply;
 
-    public String getContent() {
-        return content;
+    private String commenterTimer;
+
+    private String commenterName;
+
+    private String commentContent;
+
+    private String articleObjId;
+
+    private String commenterUrl;
+
+    public void setArticleObjId(String articleObjId) {
+        this.articleObjId = articleObjId;
     }
 
-    public Post getPost() {
-        return post;
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
     }
 
-    public MyUser getAuthor() {
-        return author;
+    public void setCommenterName(String commenterName) {
+        this.commenterName = commenterName;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setCommenterTimer(String commenterTimer) {
+        this.commenterTimer = commenterTimer;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
-    public void setAuthor(MyUser author) {
-        this.author = author;
+    public void setHasReply(Boolean hasReply) {
+        this.hasReply = hasReply;
+    }
+
+    public String getArticleObjId() {
+        return articleObjId;
+    }
+
+    public String getCommentContent() {
+        return commentContent;
+    }
+
+    public String getCommenterName() {
+        return commenterName;
+    }
+
+    public String getCommenterTimer() {
+        return commenterTimer;
+    }
+
+    public String getCommentId() {
+        return commentId;
     }
 
     public Boolean getHasReply() {
         return hasReply;
     }
 
-    public void setHasReply(Boolean hasReply) {
-        this.hasReply = hasReply;
+    public String getCommenterUrl() {
+        return commenterUrl;
+    }
+
+    public void setCommenterUrl(String commenterUrl) {
+        this.commenterUrl = commenterUrl;
     }
 }

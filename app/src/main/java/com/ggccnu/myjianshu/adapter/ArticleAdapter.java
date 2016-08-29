@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
 
+    private static final int MSG_GET_ARTICLE_PIC = 10;
+    private static final int MSG_GET_AUTHOR_PIC = 11;
     private List<Article> mArticleList;
     private Context mContext;
 
@@ -48,15 +50,16 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         Uri mUriArticlePicture = null;
 
         //在消息队列中实现对控件的更改
-        final Handler handle = new Handler() {
+        final Handler mHandler = new Handler() {
+            @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 10:
+                    case MSG_GET_ARTICLE_PIC:
                         //System.out.println("111");
                         Bitmap bmp=(Bitmap)msg.obj;
                         holder.iv_article_picture.setImageBitmap(bmp);
                         break;
-                    case 11:
+                    case MSG_GET_AUTHOR_PIC:
                         holder.iv_author_pic.setImageBitmap((Bitmap)msg.obj);
                 }
             };
@@ -79,10 +82,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 // TODO Auto-generated method stub
                 Bitmap bmp = getURLimage(mArticleList.get(position).getPictureUrl());
                 Message msg = new Message();
-                msg.what = 10;
+                msg.what = MSG_GET_ARTICLE_PIC;
                 msg.obj = bmp;
                 //System.out.println("000");
-                handle.sendMessage(msg);
+                mHandler.sendMessage(msg);
             }
         }).start();
         new Thread(new Runnable() {
@@ -92,10 +95,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 // TODO Auto-generated method stub
                 Bitmap bmpAuthorIcon = getURLimage(mArticleList.get(position).getAuthorIconUrl());
                 Message msg = new Message();
-                msg.what = 11;
+                msg.what = MSG_GET_AUTHOR_PIC;
                 msg.obj = bmpAuthorIcon;
                 //System.out.println("000");
-                handle.sendMessage(msg);
+                mHandler.sendMessage(msg);
             }
         }).start();
 

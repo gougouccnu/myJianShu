@@ -144,7 +144,7 @@ public class FaxianFragment extends BaseFragment {
 
             @Override
             public void onError(int i, String s) {
-                Log.d(TAG, "queryArticles onError");
+                Log.d(TAG, "queryArticles onError:" + s);
             }
         });
     }
@@ -176,7 +176,7 @@ public class FaxianFragment extends BaseFragment {
 
             @Override
             public void onError(int i, String s) {
-                Log.d(TAG, "queryArticles onError");
+                Log.d(TAG, "queryArticles onError:" + s);
             }
         });
     }

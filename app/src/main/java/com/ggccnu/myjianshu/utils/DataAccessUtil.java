@@ -49,6 +49,30 @@ public class DataAccessUtil {
         final List<Comment> mCommentList = new ArrayList<Comment>();
         BmobQuery<Comment> query = new BmobQuery<Comment>();
         query.addWhereEqualTo("post", post);
+        //query.include("author,post,reply");
+        query.findObjects(context, new FindListener<Comment>() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d(TAG, "queryPost err: " + s);
+            }
+
+            @Override
+            public void onSuccess(List<Comment> list) {
+                mCommentList.clear();
+                mCommentList.addAll(list);
+                Message msg = new Message();
+                msg.what = msgWhat;
+                msg.obj = mCommentList;
+                mHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    public static void queryCommentByArticleObjId(final Context context, String articleObjId, final Handler mHandler, final int msgWhat) {
+
+        final List<Comment> mCommentList = new ArrayList<Comment>();
+        BmobQuery<Comment> query = new BmobQuery<Comment>();
+        query.addWhereEqualTo("articleObjId", articleObjId);
         query.include("author,post,reply");
         query.findObjects(context, new FindListener<Comment>() {
             @Override
@@ -72,6 +96,26 @@ public class DataAccessUtil {
         BmobQuery<Reply> query = new BmobQuery<Reply>();
         query.addWhereEqualTo("comment", comment);
         query.include("author");
+        query.findObjects(context, new FindListener<Reply>() {
+            @Override
+            public void onSuccess(List<Reply> list) {
+                Log.d(TAG, "queryReply success");
+                listener.onFinish(list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.d(TAG, "queryReply err: " + s);
+                listener.onError(s);
+            }
+        });
+    }
+
+    public static void queryReplyByCommentId(final Context context, String commentId, final QueryReplyCallbackListener listener) {
+
+        BmobQuery<Reply> query = new BmobQuery<Reply>();
+        query.addWhereEqualTo("commentId", commentId);
+        //query.include("author");
         query.findObjects(context, new FindListener<Reply>() {
             @Override
             public void onSuccess(List<Reply> list) {

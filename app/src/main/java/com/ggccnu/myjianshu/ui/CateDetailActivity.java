@@ -28,7 +28,6 @@ import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.mode.ArticleComment;
 import com.ggccnu.myjianshu.mode.ArticleReply;
 import com.ggccnu.myjianshu.mode.Comment;
-import com.ggccnu.myjianshu.mode.Post;
 import com.ggccnu.myjianshu.mode.Reply;
 import com.ggccnu.myjianshu.utils.DataAccessUtil;
 import com.ggccnu.myjianshu.widget.MyDecoration;
@@ -201,7 +200,7 @@ public class CateDetailActivity extends BaseActivity{
                     case QUERY_COMMENT_MSG:
                         mCommentList.addAll((ArrayList<Comment>)msg.obj);
                         // add header null data
-                        mArticleCommentList.add(new ArticleComment("", "header", null, false));
+                        mArticleCommentList.add(new ArticleComment("", "header", null, false, "", ""));
                         // 获取评论列表
                         for (int i = 0; i < mCommentList.size(); i++) {
                             final Comment currentComment = mCommentList.get(i);
@@ -214,17 +213,16 @@ public class CateDetailActivity extends BaseActivity{
                                     @Override
                                     public void run() {
                                         // 根据 comment 的objectid查询到对应的reply list
-                                        DataAccessUtil.queryReply(CateDetailActivity.this, mCommentList.get(finalI), new DataAccessUtil.QueryReplyCallbackListener() {
+                                        DataAccessUtil.queryReplyByCommentId(CateDetailActivity.this, mCommentList.get(finalI).getCommentId(), new DataAccessUtil.QueryReplyCallbackListener() {
                                             @Override
                                             public void onFinish(List<Reply> list) {
                                                 mReplyList.clear();
                                                 mReplyList.addAll(list);
-
                                                 for (int i = 0; i < mReplyList.size(); i++) {
-                                                    articleReplyList.add(new ArticleReply(mReplyList.get(i).getAuthor().getUsername(), mReplyList.get(i).getContent()));
+                                                    articleReplyList.add(new ArticleReply(mReplyList.get(i).getReplyAuthor(), mReplyList.get(i).getReplyContent()));
                                                 }
                                                 //articleReplyList.add(new ArticleReply("author X", "reply"));
-                                                mArticleCommentList.add(new ArticleComment(currentComment.getAuthor().getUsername(), currentComment.getContent(), articleReplyList, true));
+                                                mArticleCommentList.add(new ArticleComment(currentComment.getCommenterName(), currentComment.getCommentContent(), articleReplyList, true, currentComment.getCommenterTimer(), currentComment.getCommenterUrl()));
                                                 mQueryReplyCnt--;
                                                 Message msg = new Message();
                                                 msg.what = SHOW_COMMENT;
@@ -241,7 +239,7 @@ public class CateDetailActivity extends BaseActivity{
 
                             } else {
                                 Log.d(TAG, "add comment article");
-                                mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getAuthor().getUsername(), mCommentList.get(i).getContent(), null, false));
+                                mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getCommenterName(), mCommentList.get(i).getCommentContent(), null, false, mCommentList.get(i).getCommenterTimer(), mCommentList.get(i).getCommenterUrl()));
                             }
                         }
 
@@ -252,9 +250,8 @@ public class CateDetailActivity extends BaseActivity{
             }
         };
 
-        Post post = new Post();
-        post.setObjectId("tCEkMMMh");
-        DataAccessUtil.queryComment(this, post, mHandler, QUERY_COMMENT_MSG);
+
+        DataAccessUtil.queryCommentByArticleObjId(this, articleItem.getArticleObjId(), mHandler, QUERY_COMMENT_MSG);
 
         new Thread(new Runnable() {
 

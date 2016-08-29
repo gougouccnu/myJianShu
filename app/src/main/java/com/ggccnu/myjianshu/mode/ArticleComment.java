@@ -13,13 +13,19 @@ public class ArticleComment {
 
     private Boolean hasReply;
 
+    private String floor_time;
+
+    private String commenterUrl;
+
     private List<ArticleReply> articleReplyList;
 
-    public ArticleComment(String author, String comment, List<ArticleReply> articleReplyList, Boolean hasReply) {
+    public ArticleComment(String author, String comment, List<ArticleReply> articleReplyList, Boolean hasReply, String floor_time, String commenterUrl) {
         this.author = author;
         this.content = comment;
         this.articleReplyList = articleReplyList;
         this.hasReply = hasReply;
+        this.floor_time = floor_time;
+        this.commenterUrl = commenterUrl;
     }
 
     public String getContent() {
@@ -52,5 +58,21 @@ public class ArticleComment {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getFloor_time() {
+        return floor_time;
+    }
+
+    public void setFloor_time(String floor_time) {
+        this.floor_time = floor_time;
+    }
+
+    public String getCommenterUrl() {
+        return commenterUrl;
+    }
+
+    public void setCommenterUrl(String commenterUrl) {
+        this.commenterUrl = commenterUrl;
     }
 }

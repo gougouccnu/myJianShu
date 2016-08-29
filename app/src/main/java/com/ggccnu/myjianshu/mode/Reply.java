@@ -7,44 +7,50 @@ import cn.bmob.v3.BmobObject;
  */
 public class Reply extends BmobObject {
 
-    private MyUser author;
+    private String replyContent;
 
-    private String content;
+    private String replyWho;
 
-    private Comment comment;
+    private String replyAuthor;
 
-    public Reply(MyUser author, String content) {
-        this.author = author;
-        this.content = content;
+    private String commentId;
+
+    public Reply(String commentId, String replyAuthor, String replyContent, String replyWho) {
+        this.commentId = commentId;
+        this.replyAuthor = replyAuthor;
+        this.replyContent = replyContent;
+        this.replyWho = replyWho;
     }
 
-    public Reply(String tableName, MyUser author, String content) {
-        super(tableName);
-        this.author = author;
-        this.content = content;
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
-    public void setAuthor(MyUser author) {
-        this.author = author;
+    public void setReplyAuthor(String replyAuthor) {
+        this.replyAuthor = replyAuthor;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setReplyContent(String replyContent) {
+        this.replyContent = replyContent;
     }
 
-    public MyUser getAuthor() {
-        return author;
+    public void setReplyWho(String replyWho) {
+        this.replyWho = replyWho;
     }
 
-    public String getContent() {
-        return content;
+    public String getCommentId() {
+        return commentId;
     }
 
-    public Comment getComment() {
-        return comment;
+    public String getReplyAuthor() {
+        return replyAuthor;
     }
 
-    public void setComment(Comment comment) {
-        this.comment = comment;
+    public String getReplyContent() {
+        return replyContent;
+    }
+
+    public String getReplyWho() {
+        return replyWho;
     }
 }

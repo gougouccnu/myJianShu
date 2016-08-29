@@ -1,11 +1,16 @@
 package com.ggccnu.myjianshu.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +26,9 @@ import com.ggccnu.myjianshu.mode.ArticleReply;
 import com.ggccnu.myjianshu.widget.MyClickText;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +41,7 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int COMMENT_COMMON = 2;
     private static final int COMMENT_HEADER = 3;
     private static final int COMMENT_END = 4;
+    private static final int MSG_GET_COMMENT_AUTHOR_PIC = 25;
     private List<ArticleComment> mArticleCommentList = new ArrayList<ArticleComment>();
     private Context mContext;
 
@@ -64,6 +73,8 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ReplyViewHolder) {
             ((ReplyViewHolder) holder).tv_comment_main.setText(mArticleCommentList.get(position).getContent());
+            ((ReplyViewHolder) holder).tv_author.setText(mArticleCommentList.get(position).getAuthor());
+            ((ReplyViewHolder) holder).tv_comment_floor_time.setText(mArticleCommentList.get(position).getFloor_time());
             // 找到reply,添加到comment下面
             List<ArticleReply> articleReplyList = mArticleCommentList.get(position).getArticleReplyList();
             // 新增reply，notify datasetchanged后重绘列表前要remove掉原来的
@@ -80,21 +91,50 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
             }
         } else if (holder instanceof CommonViewHolder) {
             ((CommonViewHolder) holder).tv_comment_main.setText(mArticleCommentList.get(position).getContent());
-    /*    } else if (holder instanceof HeaderViewHolder) {
-            ((HeaderViewHolder) holder).btn_display_author.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, "display author btn clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
-            ((HeaderViewHolder) holder).btn_sort_time.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, "sort time btn clicked", Toast.LENGTH_SHORT).show();
-                }
-            });  */
-        } else {
+            ((CommonViewHolder) holder).tv_author.setText(mArticleCommentList.get(position).getAuthor());
+            ((CommonViewHolder) holder).tv_comment_floor_time.setText(mArticleCommentList.get(position).getFloor_time());
 
+        }
+        if (holder instanceof CommonViewHolder || holder instanceof ReplyViewHolder) {
+            //在消息队列中实现对控件的更改
+            Log.d("DEBUG", "creating Handler in thread " + Thread.currentThread().getId());
+
+            final Handler mHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    Log.d("DEBUG", "message Handler in thread " + Thread.currentThread().getId() + ":" + msg.what);
+                    switch (msg.what) {
+                        case MSG_GET_COMMENT_AUTHOR_PIC:
+                            //System.out.println("111");
+                            Bitmap bmp=(Bitmap)msg.obj;
+                            if (holder instanceof CommonViewHolder) {
+                                ((CommonViewHolder) holder).iv_author_pic.setImageBitmap(bmp);
+                            }
+                            if (holder instanceof ReplyViewHolder) {
+                                ((ReplyViewHolder) holder).iv_author_pic.setImageBitmap(bmp);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                };
+            };
+
+
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    String url = mArticleCommentList.get(position).getCommenterUrl();
+                    Bitmap bmp = getURLimage("http://upload.jianshu.io/users/upload_avatars/2363257/90896c1911c6?imageMogr/thumbnail/90x90/quality/100");
+                    Message msg = new Message();
+                    msg.what = MSG_GET_COMMENT_AUTHOR_PIC;
+                    msg.obj = bmp;
+                    //System.out.println("000");
+                    mHandler.sendMessage(msg);
+                }
+            }).start();
         }
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null)
@@ -189,14 +229,21 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class ReplyViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView tv_author;
+        public TextView tv_comment_floor_time;
         public TextView tv_comment_main;
         public ImageButton img_btn_reply;
+        public RoundedImageView iv_author_pic;
+
         public LinearLayout parentLayout;
 
         public ReplyViewHolder(View itemView) {
             super(itemView);
             tv_comment_main = (TextView) itemView.findViewById(R.id.tv_comment_main);
             img_btn_reply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
+            iv_author_pic = (RoundedImageView) itemView.findViewById(R.id.iv_author_pic);
+            tv_author = (TextView) itemView.findViewById(R.id.tv_author);
+            tv_comment_floor_time = (TextView) itemView.findViewById(R.id.tv_comment_floor_time);
             parentLayout = (LinearLayout) itemView.findViewById(R.id.linearlayout_reply);
         }
 
@@ -204,6 +251,8 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class CommonViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView tv_author;
+        public TextView tv_comment_floor_time;
         public TextView tv_comment_main;
         public ImageButton img_btn_reply;
 
@@ -214,6 +263,8 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
             tv_comment_main = (TextView) itemView.findViewById(R.id.tv_comment_main);
             img_btn_reply = (ImageButton) itemView.findViewById(R.id.img_btn_reply);
             iv_author_pic = (RoundedImageView) itemView.findViewById(R.id.iv_author_pic);
+            tv_author = (TextView) itemView.findViewById(R.id.tv_author);
+            tv_comment_floor_time = (TextView) itemView.findViewById(R.id.tv_comment_floor_time);
         }
     }
 
@@ -289,5 +340,25 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                 return COMMENT_COMMON;
             }
         }
+    }
+
+    //加载图片
+    private Bitmap getURLimage(String url) {
+        Bitmap bmp = null;
+        try {
+            URL myurl = new URL(url);
+            // 获得连接
+            HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
+            conn.setConnectTimeout(6000);//设置超时
+            conn.setDoInput(true);
+            conn.setUseCaches(false);//不缓存
+            conn.connect();
+            InputStream is = conn.getInputStream();//获得图片的数据流
+            bmp = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bmp;
     }
 }

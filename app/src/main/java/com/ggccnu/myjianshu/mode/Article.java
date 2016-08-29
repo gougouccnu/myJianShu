@@ -18,19 +18,22 @@ public class Article extends BmobObject {
     private String authorIconUrl;
     private String pictureUrl;
     private String title;
+    private String articleUrl;
+    private String articleObjId;
 
-    public Article(int id, String author, int cid, int readTimes, int comments,
-                   int likes, int donate, String tag, String authorIconUrl, String pictureUrl, String title) {
-        this.id = id;
+    public Article(String articleObjId, String articleUrl, String author, String authorIconUrl, int cid, int comments, int donate, int id, int likes, String pictureUrl, int readTimes, String tag, String title) {
+        this.articleObjId = articleObjId;
+        this.articleUrl = articleUrl;
         this.author = author;
-        this.cid = cid;
-        this.readTimes = readTimes;
-        this.comments = comments;
-        this.likes = likes;
-        this.donate = donate;
-        this.tag = tag;
         this.authorIconUrl = authorIconUrl;
+        this.cid = cid;
+        this.comments = comments;
+        this.donate = donate;
+        this.id = id;
+        this.likes = likes;
         this.pictureUrl = pictureUrl;
+        this.readTimes = readTimes;
+        this.tag = tag;
         this.title = title;
     }
 
@@ -123,4 +126,19 @@ public class Article extends BmobObject {
         this.title = title;
     }
 
+    public String getArticleObjId() {
+        return articleObjId;
+    }
+
+    public String getArticleUrl() {
+        return articleUrl;
+    }
+
+    public void setArticleObjId(String articleObjId) {
+        this.articleObjId = articleObjId;
+    }
+
+    public void setArticleUrl(String articleUrl) {
+        this.articleUrl = articleUrl;
+    }
 }

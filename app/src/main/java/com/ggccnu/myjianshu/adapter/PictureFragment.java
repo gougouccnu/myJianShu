@@ -27,6 +27,10 @@ public class PictureFragment extends Fragment {
     private ViewPagerSlide mViewPagerSlide;
     private ImageView mImageView;
 
+    public PictureFragment() {
+
+    }
+
     public PictureFragment(ViewPagerSlide viewPagerSlide) {
         mViewPagerSlide = viewPagerSlide;
     }
