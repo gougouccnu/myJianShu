@@ -17,15 +17,18 @@ public class ArticleComment {
 
     private String commenterUrl;
 
+    private String commentPicUrl;
+
     private List<ArticleReply> articleReplyList;
 
-    public ArticleComment(String author, String comment, List<ArticleReply> articleReplyList, Boolean hasReply, String floor_time, String commenterUrl) {
+    public ArticleComment(String author, String comment, List<ArticleReply> articleReplyList, Boolean hasReply, String floor_time, String commenterUrl, String commentPicUrl) {
         this.author = author;
         this.content = comment;
         this.articleReplyList = articleReplyList;
         this.hasReply = hasReply;
         this.floor_time = floor_time;
         this.commenterUrl = commenterUrl;
+        this.commentPicUrl = commentPicUrl;
     }
 
     public String getContent() {
@@ -74,5 +77,13 @@ public class ArticleComment {
 
     public void setCommenterUrl(String commenterUrl) {
         this.commenterUrl = commenterUrl;
+    }
+
+    public String getCommentPicUrl() {
+        return commentPicUrl;
+    }
+
+    public void setCommentPicUrl(String commentPicUrl) {
+        this.commentPicUrl = commentPicUrl;
     }
 }

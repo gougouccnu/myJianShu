@@ -126,8 +126,8 @@ public class ArticleCommentListAdapter extends RecyclerView.Adapter<RecyclerView
                 @Override
                 public void run() {
                     // TODO Auto-generated method stub
-                    String url = mArticleCommentList.get(position).getCommenterUrl();
-                    Bitmap bmp = getURLimage("http://upload.jianshu.io/users/upload_avatars/2363257/90896c1911c6?imageMogr/thumbnail/90x90/quality/100");
+                    String url = mArticleCommentList.get(position).getCommentPicUrl();
+                    Bitmap bmp = getURLimage(url);
                     Message msg = new Message();
                     msg.what = MSG_GET_COMMENT_AUTHOR_PIC;
                     msg.obj = bmp;

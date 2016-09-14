@@ -21,8 +21,8 @@ public class MyClickText extends ClickableSpan {
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
-        //设置文本的颜色
-        ds.setColor(Color.BLUE);
+        //设置文本的颜色 FF3483BA
+        ds.setColor(Color.argb(0xff, 0x34, 0x83, 0xba));
         //超链接形式的下划线，false 表示不显示下划线，true表示显示下划线
         ds.setUnderlineText(false);
     }

@@ -16,6 +16,5 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tv_item_reply"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="8dp" />
+        android:layout_marginTop="8dp" />
 </LinearLayout>

@@ -6,7 +6,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#f0f0f0">
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,13 +25,24 @@
             android:text="只看作者"
             android:id="@+id/btn_display_author"
             android:layout_toEndOf="@+id/tv_comment_count"
-            android:layout_marginStart="24dp" />
+            android:layout_marginStart="24dp"
+            android:background="#f0f0f0" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="按时间正序"
             android:id="@+id/btn_sort_time"
-            android:layout_alignParentEnd="true" />
+            android:background="#f0f0f0"
+            android:layout_toLeftOf="@+id/iv_sort_more" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_sort_more"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/image_spinner_night"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 </LinearLayout>

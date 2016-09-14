@@ -200,7 +200,7 @@ public class CateDetailActivity extends BaseActivity{
                     case QUERY_COMMENT_MSG:
                         mCommentList.addAll((ArrayList<Comment>)msg.obj);
                         // add header null data
-                        mArticleCommentList.add(new ArticleComment("", "header", null, false, "", ""));
+                        mArticleCommentList.add(new ArticleComment("", "header", null, false, "", "", ""));
                         // 获取评论列表
                         for (int i = 0; i < mCommentList.size(); i++) {
                             final Comment currentComment = mCommentList.get(i);
@@ -222,7 +222,7 @@ public class CateDetailActivity extends BaseActivity{
                                                     articleReplyList.add(new ArticleReply(mReplyList.get(i).getReplyAuthor(), mReplyList.get(i).getReplyContent()));
                                                 }
                                                 //articleReplyList.add(new ArticleReply("author X", "reply"));
-                                                mArticleCommentList.add(new ArticleComment(currentComment.getCommenterName(), currentComment.getCommentContent(), articleReplyList, true, currentComment.getCommenterTimer(), currentComment.getCommenterUrl()));
+                                                mArticleCommentList.add(new ArticleComment(currentComment.getCommenterName(), currentComment.getCommentContent(), articleReplyList, true, currentComment.getCommenterTimer(), currentComment.getCommenterUrl(), currentComment.getCommentPicUrl()));
                                                 mQueryReplyCnt--;
                                                 Message msg = new Message();
                                                 msg.what = SHOW_COMMENT;
@@ -239,7 +239,7 @@ public class CateDetailActivity extends BaseActivity{
 
                             } else {
                                 Log.d(TAG, "add comment article");
-                                mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getCommenterName(), mCommentList.get(i).getCommentContent(), null, false, mCommentList.get(i).getCommenterTimer(), mCommentList.get(i).getCommenterUrl()));
+                                mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getCommenterName(), mCommentList.get(i).getCommentContent(), null, false, mCommentList.get(i).getCommenterTimer(), mCommentList.get(i).getCommenterUrl(), currentComment.getCommentPicUrl()));
                             }
                         }
 

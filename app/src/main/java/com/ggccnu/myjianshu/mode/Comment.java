@@ -21,6 +21,16 @@ public class Comment extends BmobObject {
 
     private String commenterUrl;
 
+    private String commentPicUrl;
+
+    public String getCommentPicUrl() {
+        return commentPicUrl;
+    }
+
+    public void setCommentPicUrl(String commentPicUrl) {
+        this.commentPicUrl = commentPicUrl;
+    }
+
     public void setArticleObjId(String articleObjId) {
         this.articleObjId = articleObjId;
     }
