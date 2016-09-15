@@ -52,7 +52,7 @@ public class ChildCateFragment extends Fragment {
      */
     private ArrayList<Category> mCategoryList = new ArrayList<>();
 
-    List<Article> mArticleList = new ArrayList<>();
+    //List<Article> mArticleList = new ArrayList<>();
 
     private Handler mHandler;
     private Person mPerson;
@@ -76,17 +76,10 @@ public class ChildCateFragment extends Fragment {
         mLinearLayout = (LinearLayout) inflater.inflate(R.layout.frag_child_category, container, false);
         mPager = (ViewPager) mLinearLayout.findViewById(R.id.pager_pgMain_child_category);
         mPagerTabs = (PagerSlidingTabStrip) mLinearLayout.findViewById(R.id.tabs_main_child_category);
-        queryCategoryAndArticle();
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if(msg.what == UPDATE_VIEWPAGE) {
-                    initView();
-                    mPager.setAdapter(new CategoryFragmentAdaptor(getChildFragmentManager(), mCateDetailFragmentList, mCategoryList));
-                    mPagerTabs.setViewPager(mPager);
-                }
-            }
-        };
+        //queryCategoryAndArticle();
+        initView();
+        mPager.setAdapter(new CategoryFragmentAdaptor(getChildFragmentManager(), mCateDetailFragmentList, mCategoryList));
+        mPagerTabs.setViewPager(mPager);
         return mLinearLayout;
     }
 
@@ -107,33 +100,6 @@ public class ChildCateFragment extends Fragment {
             mCateDetailFragmentList.add(mCateDetailFragment);
         }
 
-    }
-    private void queryCategoryAndArticle() {
-        BmobQuery<Article> articleBmobQuery = new BmobQuery<>();
-        articleBmobQuery.order("createdAt");
-        articleBmobQuery.findObjects(getActivity(), new FindListener<Article>() {
-            @Override
-            public void onSuccess(List<Article> list) {
-                if (list != null && list.size() > 0) {
-                    mArticleList.clear();
-                    mArticleList.addAll(list);
-                    //Log.d(TAG, "queryArticles onSuccess");
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Message message = new Message();
-                            message.what = UPDATE_VIEWPAGE;
-                            mHandler.sendMessage(message);
-                        }
-                    }).start();
-                }
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.d(TAG, "queryArticles onError");
-            }
-        });
     }
 
     /**
