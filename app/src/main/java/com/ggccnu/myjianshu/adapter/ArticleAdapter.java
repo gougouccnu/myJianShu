@@ -17,8 +17,10 @@ import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.Article;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -80,7 +82,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                Bitmap bmp = getURLimage(mArticleList.get(position).getPictureUrl());
+                Bitmap bmp = getURLimage(mArticleList.get(position).getPictureUrl(), 100, 100);
                 Message msg = new Message();
                 msg.what = MSG_GET_ARTICLE_PIC;
                 msg.obj = bmp;
@@ -93,7 +95,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                Bitmap bmpAuthorIcon = getURLimage(mArticleList.get(position).getAuthorIconUrl());
+                Bitmap bmpAuthorIcon = getURLimage(mArticleList.get(position).getAuthorIconUrl(), 100, 100);
                 Message msg = new Message();
                 msg.what = MSG_GET_AUTHOR_PIC;
                 msg.obj = bmpAuthorIcon;
@@ -170,48 +172,65 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
-    // TODO:
+    // TODO:refactor
     //加载图片
-    private Bitmap getURLimage(String url) {
+    private Bitmap getURLimage(String url, int reqWidth, int reqHeight) {
         Bitmap bmp = null;
+        HttpURLConnection conn;
+        InputStream is;
         try {
-            URL myurl = new URL(url);
-            // 获得连接
-            HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
-            conn.setConnectTimeout(6000);//设置超时
-            conn.setDoInput(true);
-            conn.setUseCaches(false);//不缓存
-            conn.connect();
-            InputStream is = conn.getInputStream();//获得图片的数据流
-            //bmp = BitmapFactory.decodeStream(is);
-            bmp = decodeSampledBitmapFromStream(is, 100, 100);
+            conn = getUrlConnection(url);
+            is = conn.getInputStream();//获得图片的数据流
+            // 第一次加载时 将inJustDecodeBounds设置为true 表示不真正加载图片到内存
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(is, null, options);
+
+            // 根据目标宽和高 以及当前图片的大小 计算出压缩比率
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+            // 将inJustDecodeBounds设置为false 真正加载图片 然后根据压缩比率压缩图片 再去解码
+            options.inJustDecodeBounds = false;
+            // inputStream不能重用，要先关掉，再new一个
             is.close();
+            conn.disconnect();
+
+            // 新建conn，重新获取图片
+            conn = getUrlConnection(url);
+            is = conn.getInputStream();
+            bmp = BitmapFactory.decodeStream(is, null, options);
+            is.close();
+            conn.disconnect();
+            return bmp;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return bmp;
     }
 
-    private Bitmap decodeSampledBitmapFromStream(InputStream is,
-                                                         int reqWidth, int reqHeight) {
-
-// 第一次加载时 将inJustDecodeBounds设置为true 表示不真正加载图片到内存
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(is, null, options);
-
-// 根据目标宽和高 以及当前图片的大小 计算出压缩比率
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-// 将inJustDecodeBounds设置为false 真正加载图片 然后根据压缩比率压缩图片 再去解码
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeStream(is, null, options);
+    private HttpURLConnection getUrlConnection(String url) {
+        URL myurl = null;
+        try {
+            myurl = new URL(url);
+            HttpURLConnection conn;
+            conn = (HttpURLConnection) myurl.openConnection();
+            conn.setConnectTimeout(6000);//设置超时
+            conn.setDoInput(true);
+            conn.setUseCaches(false);//不缓存
+            conn.connect();
+            return conn;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //计算压缩比率 android官方提供的算法
     private int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
-// Raw height and width of image
+        // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
