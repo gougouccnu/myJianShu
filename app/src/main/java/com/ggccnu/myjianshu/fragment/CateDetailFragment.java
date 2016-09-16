@@ -1,5 +1,6 @@
 package com.ggccnu.myjianshu.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -204,6 +205,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     private void queryArticlesByCategoryID(Integer categoryID) {
         BmobQuery<Article> articlesBmobQuery = new BmobQuery<>();
         articlesBmobQuery.order("createdAt");
+        articlesBmobQuery.setLimit(15);
         articlesBmobQuery.addWhereEqualTo("cid", categoryID);
         articlesBmobQuery.findObjects(getActivity(), new FindListener<Article>() {
             @Override
@@ -221,12 +223,12 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                         }
                     }).start();
                 }
-                Log.d(TAG, "query new Articles onSuccess");
+                Log.d(TAG, "query new Articles onSuccess" + mCid);
             }
 
             @Override
             public void onError(int i, String s) {
-                Log.d(TAG, "query new Articles onError");
+                Log.d(TAG, "query new Articles onError" + mCid);
             }
         });
     }
@@ -281,21 +283,14 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                         }
                     }).start();
                 }
-                Log.d(TAG, "query new Articles onSuccess");
+                Log.d(TAG, "query new Articles onSuccess" + mCid);
             }
 
             @Override
             public void onError(int i, String s) {
-                Log.d(TAG, "query new Articles onError");
+                Log.d(TAG, "query new Articles onError" + mCid);
             }
         });
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // TODO:
     }
 
     @Override
@@ -303,8 +298,103 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
 
     }
 
+
+    /**
+     * Called when the fragment's activity has been created and this
+     * fragment's view hierarchy instantiated.  It can be used to do final
+     * initialization once these pieces are in place, such as retrieving
+     * views or restoring state.  It is also useful for fragments that use
+     * {@link #setRetainInstance(boolean)} to retain their instance,
+     * as this callback tells the fragment when it is fully associated with
+     * the new activity instance.  This is called after {@link #onCreateView}
+     * and before {@link #onViewStateRestored(Bundle)}.
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     *                           a previous saved state, this is the state.
+     */
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated" + mCid);
+    }
+
+    /**
+     * Called when the Fragment is no longer resumed.  This is generally
+     * tied to {@link Activity#onPause() Activity.onPause} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause" + mCid);
+    }
+
+    /**
+     * Called when the Fragment is visible to the user.  This is generally
+     * tied to {@link Activity#onStart() Activity.onStart} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart" + mCid);
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy" + mCid);
+    }
+
+    /**
+     * Called when the fragment is no longer attached to its activity.  This
+     * is called after {@link #onDestroy()}.
+     */
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetach" + mCid);
+    }
+
+    /**
+     * Called when the view previously created by {@link #onCreateView} has
+     * been detached from the fragment.  The next time the fragment needs
+     * to be displayed, a new view will be created.  This is called
+     * after {@link #onStop()} and before {@link #onDestroy()}.  It is called
+     * <em>regardless</em> of whether {@link #onCreateView} returned a
+     * non-null view.  Internally it is called after the view's state has
+     * been saved but before it has been removed from its parent.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d(TAG, "onDestroyView" + mCid);
+    }
+
+    /**
+     * Called when a fragment is first attached to its context.
+     * {@link #onCreate(Bundle)} will be called after this.
+     *
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d(TAG, "onAttach" + mCid);
+    }
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onRescume" + mCid);
     }
 }
