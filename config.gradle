@@ -9,7 +9,7 @@ ext {
                versionName      : "1.0.1"]
 
     dependencies = ["support-v4"               : 'com.android.support:support-v4:23.0.1',
-                    "appcompat-v7"             : 'com.android.support:appcompat-v7:23.0.1',
+                    "appcompat-v7"             : 'com.android.support:appcompat-v7:24.2.0',
                     "design"                   : 'com.android.support:design:23.0.1',
                     "cardview-v7"              : 'com.android.support:cardview-v7:23.1.1',
                     "recyclerview-v7"          : 'com.android.support:recyclerview-v7:23.2.1',
@@ -26,5 +26,6 @@ ext {
                     "PagerSlidingTabStrip"     : 'com.astuetz:pagerslidingtabstrip:1.0.1',
                     "betterspinner"            : 'com.weiwangcn.betterspinner:library:1.1.0',
                     "floatingactionbutton"     : 'com.getbase:floatingactionbutton:1.10.1',
-                    "gson"                     : 'com.google.code.gson:gson:2.6.2']
+                    "gson"                     : 'com.google.code.gson:gson:2.6.2',
+                    "fresco"                   : 'com.facebook.fresco:fresco:0.14.1']
 }

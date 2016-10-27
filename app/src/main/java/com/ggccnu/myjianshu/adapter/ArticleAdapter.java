@@ -3,16 +3,23 @@ package com.ggccnu.myjianshu.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.common.logging.FLog;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.image.QualityInfo;
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.Article;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -55,11 +62,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case MSG_GET_ARTICLE_PIC:
-                        //System.out.println("111");
-                        Bitmap bmp=(Bitmap)msg.obj;
-                        holder.iv_article_picture.setImageBitmap(bmp);
-                        break;
                     case MSG_GET_AUTHOR_PIC:
                         holder.iv_author_pic.setImageBitmap((Bitmap)msg.obj);
                 }
@@ -81,19 +83,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                Bitmap bmp = getURLimage(mArticleList.get(position).getPictureUrl(), 100, 100);
-                Message msg = new Message();
-                msg.what = MSG_GET_ARTICLE_PIC;
-                msg.obj = bmp;
-                //System.out.println("000");
-                mHandler.sendMessage(msg);
-            }
-        }).start();
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
                 Bitmap bmpAuthorIcon = getURLimage(mArticleList.get(position).getAuthorIconUrl(), 100, 100);
                 Message msg = new Message();
                 msg.what = MSG_GET_AUTHOR_PIC;
@@ -102,6 +91,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 mHandler.sendMessage(msg);
             }
         }).start();
+
+        Uri uri = Uri.parse(mArticleList.get(position).getPictureUrl());
+        holder.iv_article_picture.setImageURI(uri);
 
 
         // 如果设置了回调，则设置点击事件
@@ -143,7 +135,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         public TextView tv_article_title;
         public TextView tv_article_tag;
         public TextView tv_article_likes;
-        public ImageView iv_article_picture;
+        public SimpleDraweeView iv_article_picture;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -153,7 +145,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             tv_article_title = (TextView) itemView.findViewById(R.id.tv_article_title);
             tv_article_tag = (TextView) itemView.findViewById(R.id.tv_article_category);
             tv_article_likes = (TextView) itemView.findViewById(R.id.tv_article_likes);
-            iv_article_picture = (ImageView) itemView.findViewById(R.id.iv_article_picture);
+            iv_article_picture = (SimpleDraweeView) itemView.findViewById(R.id.iv_article_picture);
         }
 
     }
@@ -261,4 +253,36 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         return inSampleSize;
     }
+
+    ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
+        @Override
+        public void onFinalImageSet(
+                String id,
+                @Nullable ImageInfo imageInfo,
+                @Nullable Animatable anim) {
+            if (imageInfo == null) {
+                return;
+            }
+            QualityInfo qualityInfo = imageInfo.getQualityInfo();
+            FLog.d("Final image received! " +
+                            "Size %d x %d",
+                    "Quality level %d, good enough: %s, full quality: %s",
+                    imageInfo.getWidth(),
+                    imageInfo.getHeight(),
+                    qualityInfo.getQuality(),
+                    qualityInfo.isOfGoodEnoughQuality(),
+                    qualityInfo.isOfFullQuality());
+        }
+
+        @Override
+        public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
+            FLog.d("Intermediate image received", "intermedia");
+        }
+
+        @Override
+        public void onFailure(String id, Throwable throwable) {
+            FLog.e(getClass(), throwable, "Error loading %s", id);
+        }
+    };
+
 }

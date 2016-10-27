@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ggccnu.myjianshu" >
+    package="com.ggccnu.myjianshu">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -13,10 +13,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".ui.MyAppalication"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-
-        <activity android:name=".ui.SplashActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,13 +24,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.BaseActivity" />
-        <activity
-            android:name=".ui.MainActivity" />
-        <activity
-            android:name=".ui.WriteArticleActivity" />
+        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.WriteArticleActivity" />
         <activity
             android:name=".ui.CateDetailActivity"
-            android:parentActivityName=".ui.MainActivity"/>
+            android:parentActivityName=".ui.MainActivity" />
+        <!--activity
+            android:name=".ui.MyAppalication"
+            android:label="@string/title_activity_my_appalication"
+            android:theme="@style/AppTheme"></activity-->
     </application>
 
 </manifest>
