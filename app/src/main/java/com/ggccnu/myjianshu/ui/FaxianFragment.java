@@ -21,6 +21,8 @@ import com.ggccnu.myjianshu.fragment.ChildCateFragment;
 import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.mode.Category;
 import com.ggccnu.myjianshu.mode.Person;
+import com.ggccnu.myjianshu.utils.ArticleCallbackListener;
+import com.ggccnu.myjianshu.utils.DataAccessUtil;
 import com.ggccnu.myjianshu.widget.BaseFragment;
 
 import java.io.Serializable;
@@ -79,19 +81,16 @@ public class FaxianFragment extends BaseFragment {
         mCategoryList.add(new Category(0, "文章", "", 0));
         mCategoryList.add(new Category(1, "专题", "", 1));
         // 获取子fragment里面cid=0的文章
-        queryArticlesByCategoryID(0);
-        // 子线程中更新UI
-        mHandler = new Handler() {
+        DataAccessUtil.queryArticlesByCategoryID(getActivity(), 0, new ArticleCallbackListener() {
             @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == UPDATE_VIEWPAGE) {
-                    Log.d(TAG, "handle message");
+            public void onFinish(List<Article> list) {
+                if (list != null && list.size() > 0) {
                     // 添加子frag
                     ChildCateFragment mChildCateFragment = new ChildCateFragment();
 
                     Bundle mBundle = new Bundle();
                     mBundle.putInt("cid", mCategoryList.get(0).getId());
-                    mBundle.putSerializable("articles", (Serializable) msg.obj);
+                    mBundle.putSerializable("articles", (Serializable) list);
                     mChildCateFragment.setArguments(mBundle);
                     mCateDetailFragmentList.add(mChildCateFragment);
 
@@ -99,7 +98,7 @@ public class FaxianFragment extends BaseFragment {
                         CateDetailFragment mCateDetailFragment = new CateDetailFragment();
                         Bundle mBundle2 = new Bundle();
                         mBundle2.putInt("cid", mCategoryList.get(i).getId());
-                        mBundle2.putSerializable("articles", (Serializable) msg.obj);
+                        mBundle2.putSerializable("articles", (Serializable) list);
                         mCateDetailFragment.setArguments(mBundle2);
                         mCateDetailFragmentList.add(mCateDetailFragment);
                     }
@@ -113,91 +112,10 @@ public class FaxianFragment extends BaseFragment {
                     mPagerTabs.setViewPager(mPager);
                 }
             }
-        };
-    }
-
-
-
-    private void queryArticles() {
-        BmobQuery<Article> articlesBmobQuery = new BmobQuery<>();
-        articlesBmobQuery.order("createdAt");
-        articlesBmobQuery.findObjects(getActivity(), new FindListener<Article>() {
-            @Override
-            public void onSuccess(List<Article> list) {
-                if (list != null && list.size() > 0) {
-                    final List<Article> mArticleList = new ArrayList<Article>();
-                    for (Article article : list) {
-                        mArticleList.add(article);
-                    }
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Message msg = new Message();
-                            msg.what = UPDATE_VIEWPAGE;
-                            msg.obj = mArticleList;
-                            mHandler.sendMessage(msg);
-                        }
-                    }).start();
-                }
-                Log.d(TAG, "queryArticles onSuccess");
-            }
 
             @Override
-            public void onError(int i, String s) {
-                Log.d(TAG, "queryArticles onError:" + s);
-            }
-        });
-    }
+            public void onError(String s) {
 
-    private void queryArticlesByCategoryID(Integer categoryID) {
-        BmobQuery<Article> articlesBmobQuery = new BmobQuery<>();
-        articlesBmobQuery.order("createdAt");
-        articlesBmobQuery.addWhereEqualTo("cid", categoryID);
-        articlesBmobQuery.findObjects(getActivity(), new FindListener<Article>() {
-            @Override
-            public void onSuccess(List<Article> list) {
-                if (list != null && list.size() > 0) {
-                    final List<Article> mArticleList = new ArrayList<Article>();
-                    for (Article article : list) {
-                        mArticleList.add(article);
-                    }
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Message msg = new Message();
-                            msg.what = UPDATE_VIEWPAGE;
-                            msg.obj = mArticleList;
-                            mHandler.sendMessage(msg);
-                        }
-                    }).start();
-                }
-                Log.d(TAG, "queryArticles onSuccess");
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.d(TAG, "queryArticles onError:" + s);
-            }
-        });
-    }
-
-    private void queryCategory() {
-        //showLoadingDialog();
-        BmobQuery<Category> categoryBmobQuery = new BmobQuery<>();
-        categoryBmobQuery.order("createdAt");// 按照时间降序
-        categoryBmobQuery.findObjects(getActivity(), new FindListener<Category>() {
-            @Override
-            public void onSuccess(List<Category> list) {
-                if (list != null && list.size() > 0) {
-                    mCategoryList.addAll(list);
-                    queryArticles();
-                }
-                Log.d(TAG, "queryCategory onSuccess");
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.d(TAG, "queryCategory onError");
             }
         });
     }

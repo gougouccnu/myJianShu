@@ -193,65 +193,60 @@ public class CateDetailActivity extends BaseActivity{
             };
         };
 
-        final Handler mHandler = new Handler() {
+        DataAccessUtil.queryCommentByArticleObjId(this, articleItem.getArticleObjId(), new DataAccessUtil.CommentCallbackListener() {
             @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case QUERY_COMMENT_MSG:
-                        mCommentList.addAll((ArrayList<Comment>)msg.obj);
-                        // add header null data
-                        mArticleCommentList.add(new ArticleComment("", "header", null, false, "", "", ""));
-                        // 获取评论列表
-                        for (int i = 0; i < mCommentList.size(); i++) {
-                            final Comment currentComment = mCommentList.get(i);
-                            if (mCommentList.get(i).getHasReply()) {
-                                // 记录query reply count
-                                mQueryReplyCnt++;
-                                final List<ArticleReply> articleReplyList = new ArrayList<>();
-                                final int finalI = i;
-                                new Thread(new Runnable() {
+            public void onFinish(List<Comment> list) {
+                mCommentList.addAll(list);
+                // add header null data
+                mArticleCommentList.add(new ArticleComment("", "header", null, false, "", "", ""));
+                // 获取评论列表
+                for (int i = 0; i < mCommentList.size(); i++) {
+                    final Comment currentComment = mCommentList.get(i);
+                    if (mCommentList.get(i).getHasReply()) {
+                        // 记录query reply count
+                        mQueryReplyCnt++;
+                        final List<ArticleReply> articleReplyList = new ArrayList<>();
+                        final int finalI = i;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 根据 comment 的objectid查询到对应的reply list
+                                DataAccessUtil.queryReplyByCommentId(CateDetailActivity.this, mCommentList.get(finalI).getCommentId(), new DataAccessUtil.ReplyCallbackListener() {
                                     @Override
-                                    public void run() {
-                                        // 根据 comment 的objectid查询到对应的reply list
-                                        DataAccessUtil.queryReplyByCommentId(CateDetailActivity.this, mCommentList.get(finalI).getCommentId(), new DataAccessUtil.QueryReplyCallbackListener() {
-                                            @Override
-                                            public void onFinish(List<Reply> list) {
-                                                mReplyList.clear();
-                                                mReplyList.addAll(list);
-                                                for (int i = 0; i < mReplyList.size(); i++) {
-                                                    articleReplyList.add(new ArticleReply(mReplyList.get(i).getReplyAuthor(), mReplyList.get(i).getReplyContent()));
-                                                }
-                                                //articleReplyList.add(new ArticleReply("author X", "reply"));
-                                                mArticleCommentList.add(new ArticleComment(currentComment.getCommenterName(), currentComment.getCommentContent(), articleReplyList, true, currentComment.getCommenterTimer(), currentComment.getCommenterUrl(), currentComment.getCommentPicUrl()));
-                                                mQueryReplyCnt--;
-                                                Message msg = new Message();
-                                                msg.what = SHOW_COMMENT;
-                                                handle.sendMessage(msg);
-                                            }
-
-                                            @Override
-                                            public void onError(String s) {
-
-                                            }
-                                        });
+                                    public void onFinish(List<Reply> list) {
+                                        mReplyList.clear();
+                                        mReplyList.addAll(list);
+                                        for (int i = 0; i < mReplyList.size(); i++) {
+                                            articleReplyList.add(new ArticleReply(mReplyList.get(i).getReplyAuthor(), mReplyList.get(i).getReplyContent()));
+                                        }
+                                        //articleReplyList.add(new ArticleReply("author X", "reply"));
+                                        mArticleCommentList.add(new ArticleComment(currentComment.getCommenterName(), currentComment.getCommentContent(), articleReplyList, true, currentComment.getCommenterTimer(), currentComment.getCommenterUrl(), currentComment.getCommentPicUrl()));
+                                        mQueryReplyCnt--;
+                                        Message msg = new Message();
+                                        msg.what = SHOW_COMMENT;
+                                        handle.sendMessage(msg);
                                     }
-                                }).start();
 
-                            } else {
-                                Log.d(TAG, "add comment article");
-                                mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getCommenterName(), mCommentList.get(i).getCommentContent(), null, false, mCommentList.get(i).getCommenterTimer(), mCommentList.get(i).getCommenterUrl(), currentComment.getCommentPicUrl()));
+                                    @Override
+                                    public void onError(String s) {
+
+                                    }
+                                });
                             }
-                        }
+                        }).start();
 
-                        break;
-                    default:
-                        break;
+                    } else {
+                        Log.d(TAG, "add comment article");
+                        mArticleCommentList.add(new ArticleComment(mCommentList.get(i).getCommenterName(), mCommentList.get(i).getCommentContent(), null, false, mCommentList.get(i).getCommenterTimer(), mCommentList.get(i).getCommenterUrl(), currentComment.getCommentPicUrl()));
+                    }
                 }
             }
-        };
 
-
-        DataAccessUtil.queryCommentByArticleObjId(this, articleItem.getArticleObjId(), mHandler, QUERY_COMMENT_MSG);
+            @Override
+            public void onError(String s) {
+                Log.d(TAG, "queryPost err: " + s);
+            }
+        });
 
         new Thread(new Runnable() {
 

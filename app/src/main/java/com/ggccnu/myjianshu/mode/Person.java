@@ -13,9 +13,6 @@ public class Person extends BmobUser {
     private String sex;
     private String birth;
 
-
-
-
     public String getName() {
         return name;
     }

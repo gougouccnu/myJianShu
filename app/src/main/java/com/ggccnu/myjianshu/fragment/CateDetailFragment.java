@@ -44,6 +44,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     private static final int LOAD_NEW_ITEMS = 3;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView rvArticle;
+    private LinearLayoutManager mLayoutManager;
     private List<Article> mArticleList = new ArrayList<>();
 
     private int mCid;
@@ -85,16 +86,6 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onRefresh() {
         queryNewArticlesByCategoryID(mCid);
-         mUpdateItemsHandler =  new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == LOAD_NEW_ITEMS) {
-                    // notify data changed
-                    mArticleAdapter.notifyDataSetChanged();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        };
         mSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -109,8 +100,8 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
         rvArticle = (RecyclerView) view.findViewById(R.id.rv_article);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swpRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        rvArticle.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        rvArticle.setLayoutManager(mLayoutManager);
         mLoadItemsHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -118,7 +109,7 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                     mArticleAdapter = new ArticleAdapter(mArticleList, getActivity());
                     rvArticle.setAdapter(mArticleAdapter);
                     // RecyclerView inside Scrollview时，让滑动smooth
-                    rvArticle.setNestedScrollingEnabled(false);
+                    //rvArticle.setNestedScrollingEnabled(false);
                     mArticleAdapter.setOnItemClickLitener(new ArticleAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
@@ -144,6 +135,34 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                 }
             }
         };
+        rvArticle.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            /**
+             * Callback method to be invoked when the RecyclerView has been scrolled. This will be
+             * called after the scroll has completed.
+             * <p>
+             * This callback will also be called if visible item range changes after a layout
+             * calculation. In that case, dx and dy will be 0.
+             *
+             * @param recyclerView The RecyclerView which scrolled.
+             * @param dx           The amount of horizontal scroll.
+             * @param dy           The amount of vertical scroll.
+             */
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                int totalItemCount = mLayoutManager.getItemCount();
+                if (lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                    boolean isLoadingMore = false;
+                    if (isLoadingMore) {
+                        Log.d(TAG, "ignore manually update");
+                    } else {
+                        queryNewArticlesByCategoryID(mCid);
+                        isLoadingMore = false;
+                    }
+                }
+            }
+        });
         if (mCid == 0) {
             //请求服务器获取picture slide URL
             queryViewPagerSlideURL();
@@ -273,15 +292,9 @@ public class CateDetailFragment extends BaseFragment implements SwipeRefreshLayo
                 if (list != null && list.size() > 0) {
                     mArticleList.clear();
                     mArticleList.addAll(list);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Message msg = new Message();
-                            msg.what = LOAD_NEW_ITEMS;
-                            //msg.obj = mArticleList;
-                            mUpdateItemsHandler.sendMessage(msg);
-                        }
-                    }).start();
+                    // notify data changed
+                    mArticleAdapter.notifyDataSetChanged();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
                 Log.d(TAG, "query new Articles onSuccess" + mCid);
             }
