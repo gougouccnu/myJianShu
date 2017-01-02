@@ -14,15 +14,10 @@ import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.adapter.CategoryFragmentAdaptor;
 import com.ggccnu.myjianshu.fragment.ArticleFragment;
 import com.ggccnu.myjianshu.fragment.TopicFragment;
-import com.ggccnu.myjianshu.mode.Article;
 import com.ggccnu.myjianshu.mode.Category;
-import com.ggccnu.myjianshu.utils.ArticleCallbackListener;
-import com.ggccnu.myjianshu.utils.BmobRequestUtil;
 import com.ggccnu.myjianshu.widget.BaseFragment;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lishaowei on 16/6/18.
@@ -68,35 +63,21 @@ public class FaxianFragment extends BaseFragment {
 
         mCategoryList.add(new Category(0, "文章", "", 0));
         mCategoryList.add(new Category(1, "专题", "", 1));
-        // 获取子fragment里面cid=0的文章
-        BmobRequestUtil.queryArticlesByCategoryID(getActivity(), 0, new ArticleCallbackListener() {
-            @Override
-            public void onFinish(List<Article> list) {
-                if (list != null && list.size() > 0) {
-                    // 添加子frag
-                    ArticleFragment mArticleFragment = new ArticleFragment();
-                    Bundle mBundle = new Bundle();
-                    mBundle.putInt("cid", mCategoryList.get(0).getId());
-                    mBundle.putSerializable("articles", (Serializable) list);
-                    mArticleFragment.setArguments(mBundle);
-                    mCateDetailFragmentList.add(mArticleFragment);
 
-                    TopicFragment mTopicFragment = new TopicFragment();
-                    Bundle mBundle2 = new Bundle();
-                    mBundle2.putInt("cid", 1);
-                    mCateDetailFragmentList.add(mTopicFragment);
+        ArticleFragment mArticleFragment = new ArticleFragment();
+        Bundle mBundle = new Bundle();
+        mBundle.putInt("cid", mCategoryList.get(0).getId());
+        mArticleFragment.setArguments(mBundle);
+        mCateDetailFragmentList.add(mArticleFragment);
 
-                    mPager = (ViewPager) view.findViewById(R.id.pager_pgMain);
-                    mPagerTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs_main);
-                    mPager.setAdapter(new CategoryFragmentAdaptor(getChildFragmentManager(), mCateDetailFragmentList, mCategoryList));
-                    mPagerTabs.setViewPager(mPager);
-                }
-            }
+        TopicFragment mTopicFragment = new TopicFragment();
+        Bundle mBundle2 = new Bundle();
+        mBundle2.putInt("cid", 1);
+        mCateDetailFragmentList.add(mTopicFragment);
 
-            @Override
-            public void onError(String s) {
-
-            }
-        });
+        mPager = (ViewPager) view.findViewById(R.id.pager_pgMain);
+        mPagerTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs_main);
+        mPager.setAdapter(new CategoryFragmentAdaptor(getChildFragmentManager(), mCateDetailFragmentList, mCategoryList));
+        mPagerTabs.setViewPager(mPager);
     }
 }
