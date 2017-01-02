@@ -34,8 +34,6 @@ import java.util.List;
  */
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
 
-    private static final int MSG_GET_ARTICLE_PIC = 10;
-    private static final int MSG_GET_AUTHOR_PIC = 11;
     private List<Article> mArticleList;
     private Context mContext;
 

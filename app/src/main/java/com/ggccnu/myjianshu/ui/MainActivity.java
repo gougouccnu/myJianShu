@@ -36,15 +36,8 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.act_ui_main);
 
-        //initBmobData();
-        initView2();
+        initView();
         initData();
-        imgBtnWrite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, WriteArticleActivity.class));
-            }
-        });
     }
 
     public void setFragmentSavedState(String key, Fragment.SavedState state){
@@ -55,10 +48,15 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabClickLi
         return savedStateMap.get(key);
     }
 
-    private void initView2() {
+    private void initView() {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         imgBtnWrite = (ImageButton) findViewById(R.id.img_button_write);
-        //mNoScrolledViewPager = (NoScrolledViewPager) findViewById(R.id.no_scrolled_viewpager);
+        imgBtnWrite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, WriteArticleActivity.class));
+            }
+        });
     }
 
     private void initData(){

@@ -12,7 +12,11 @@ public class Category extends BmobObject{
     private String desc;
     private int pid;
 
-    public Category(Integer id,String name, String desc, int pid) {
+    public Category() {
+
+    }
+
+    public Category(Integer id, String name, String desc, int pid) {
         this.id = id;
         this.name = name;
         this.desc = desc;

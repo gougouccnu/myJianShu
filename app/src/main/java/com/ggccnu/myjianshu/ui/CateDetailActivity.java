@@ -29,7 +29,7 @@ import com.ggccnu.myjianshu.mode.ArticleComment;
 import com.ggccnu.myjianshu.mode.ArticleReply;
 import com.ggccnu.myjianshu.mode.Comment;
 import com.ggccnu.myjianshu.mode.Reply;
-import com.ggccnu.myjianshu.utils.DataAccessUtil;
+import com.ggccnu.myjianshu.utils.BmobRequestUtil;
 import com.ggccnu.myjianshu.widget.MyDecoration;
 
 import java.io.InputStream;
@@ -193,7 +193,7 @@ public class CateDetailActivity extends BaseActivity{
             };
         };
 
-        DataAccessUtil.queryCommentByArticleObjId(this, articleItem.getArticleObjId(), new DataAccessUtil.CommentCallbackListener() {
+        BmobRequestUtil.queryCommentByArticleObjId(this, articleItem.getArticleObjId(), new BmobRequestUtil.CommentCallbackListener() {
             @Override
             public void onFinish(List<Comment> list) {
                 mCommentList.addAll(list);
@@ -211,7 +211,7 @@ public class CateDetailActivity extends BaseActivity{
                             @Override
                             public void run() {
                                 // 根据 comment 的objectid查询到对应的reply list
-                                DataAccessUtil.queryReplyByCommentId(CateDetailActivity.this, mCommentList.get(finalI).getCommentId(), new DataAccessUtil.ReplyCallbackListener() {
+                                BmobRequestUtil.queryReplyByCommentId(CateDetailActivity.this, mCommentList.get(finalI).getCommentId(), new BmobRequestUtil.ReplyCallbackListener() {
                                     @Override
                                     public void onFinish(List<Reply> list) {
                                         mReplyList.clear();

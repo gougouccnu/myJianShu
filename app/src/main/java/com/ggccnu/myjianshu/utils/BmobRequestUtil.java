@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ggccnu.myjianshu.mode.Article;
+import com.ggccnu.myjianshu.mode.Category;
 import com.ggccnu.myjianshu.mode.Comment;
 import com.ggccnu.myjianshu.mode.Reply;
+import com.ggccnu.myjianshu.mode.ViewPagerSlide;
 
 import java.util.List;
 
@@ -15,10 +17,15 @@ import cn.bmob.v3.listener.FindListener;
 /**
  * Created by lishaowei on 16/8/17.
  */
-public class DataAccessUtil {
+public class BmobRequestUtil {
 
-    private static final String TAG = "DataAccessUtil";
-
+    private static final String TAG = "BmobRequestUtil";
+/*
+    private E e;
+    public BmobRequestUtil(E e) {
+        e = e;
+    }
+*/
     public static void queryCommentByArticleObjId(final Context context, String articleObjId, final CommentCallbackListener listener) {
 
         BmobQuery<Comment> query = new BmobQuery<Comment>();
@@ -63,6 +70,55 @@ public class DataAccessUtil {
         articlesBmobQuery.findObjects(context, new FindListener<Article>() {
             @Override
             public void onSuccess(List<Article> list) {
+                listener.onFinish(list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                listener.onError(s);
+            }
+        });
+    }
+
+    public static void queryViewPagerSlideURL(final Context context, final ViewPagerSlideCallbackListener listener) {
+        BmobQuery<ViewPagerSlide> slideBmobQuery = new BmobQuery<>();
+        slideBmobQuery.order("createdAt");
+        slideBmobQuery.findObjects(context, new FindListener<ViewPagerSlide>() {
+            @Override
+            public void onSuccess(List<ViewPagerSlide> list) {
+                listener.onFinish(list);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                listener.onError(s);
+            }
+        });
+    }
+/*
+    public static <E> void get(final Context context, E e) {
+
+        BmobQuery<e> slideBmobQuery = new BmobQuery<>();
+        slideBmobQuery.order("createdAt");
+        slideBmobQuery.findObjects(context, new FindListener<e>() {
+            @Override
+            public void onSuccess(List<e> list) {
+                Log.d(TAG, "queryReply success");
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+    }
+*/
+    public static void queryCategory(final Context context, final CategoryCallbackListener listener) {
+        BmobQuery<Category> categoryBmobQuery = new BmobQuery<>();
+        categoryBmobQuery.order("createdAt");// 按照时间降序
+        categoryBmobQuery.findObjects(context, new FindListener<Category>() {
+            @Override
+            public void onSuccess(List<Category> list) {
                 listener.onFinish(list);
             }
 

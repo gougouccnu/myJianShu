@@ -8,14 +8,14 @@ import android.view.Window;
 
 import com.ggccnu.myjianshu.R;
 import com.ggccnu.myjianshu.mode.Category;
+import com.ggccnu.myjianshu.utils.CategoryCallbackListener;
+import com.ggccnu.myjianshu.utils.BmobRequestUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
 
 /**
@@ -38,16 +38,9 @@ public class SplashActivity extends Activity {
         Bmob.initialize(this, "ca3f68beaf133e348d60dcbd5f63d20c");
         BmobUpdateAgent.update(this);
 
-        queryCategory();
-
-    }
-
-    private void queryCategory() {
-        BmobQuery<Category> categoryBmobQuery = new BmobQuery<>();
-        categoryBmobQuery.order("createdAt");// 按照时间降序
-        categoryBmobQuery.findObjects(this, new FindListener<Category>() {
+        BmobRequestUtil.queryCategory(this, new CategoryCallbackListener() {
             @Override
-            public void onSuccess(List<Category> list) {
+            public void onFinish(List<Category> list) {
                 if (list != null && list.size() > 0) {
                     ArrayList<Category> categories = new ArrayList<Category>();
                     categories.addAll(list);
@@ -61,9 +54,13 @@ public class SplashActivity extends Activity {
             }
 
             @Override
-            public void onError(int i, String s) {
-                //HankkinUtils.showToast(SplasActivity.this, s);
+            public void onError(String s) {
+
             }
         });
+/*
+        BmobRequestUtil<Category> dataAccessUtil = new BmobRequestUtil<Category>();
+        dataAccessUtil.get(this, new Category());
+*/
     }
 }
