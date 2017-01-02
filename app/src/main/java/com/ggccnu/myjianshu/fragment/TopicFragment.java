@@ -30,9 +30,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.listener.FindListener;
-
 /**
  * Created by lishaowei on 16/6/4.
  */
@@ -107,7 +104,23 @@ public class TopicFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        queryNewArticlesByCategoryID(mCid);
+        BmobRequestUtil.queryArticlesByCategoryID(getActivity(), mCid, new ArticleCallbackListener() {
+            @Override
+            public void onFinish(List<Article> list) {
+                if (list != null && list.size() > 0) {
+                    mArticleList.clear();
+                    mArticleList.addAll(list);
+                    // notify data changed
+                    mArticleAdapter.notifyDataSetChanged();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onError(String s) {
+
+            }
+        });
         mSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -144,7 +157,24 @@ public class TopicFragment extends BaseFragment implements SwipeRefreshLayout.On
                     if (isLoadingMore) {
                         Log.d(TAG, "ignore manually update");
                     } else {
-                        queryNewArticlesByCategoryID(mCid);
+                        BmobRequestUtil.queryArticlesByCategoryID(getActivity(), mCid, new ArticleCallbackListener() {
+                            @Override
+                            public void onFinish(List<Article> list) {
+                                if (list != null && list.size() > 0) {
+                                    mArticleList.clear();
+                                    mArticleList.addAll(list);
+                                    // notify data changed
+                                    mArticleAdapter.notifyDataSetChanged();
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                }
+                                Log.d(TAG, "query new Articles onSuccess" + mCid);
+                            }
+
+                            @Override
+                            public void onError(String s) {
+                                Log.d(TAG, "query new Articles onError" + mCid);
+                            }
+                        });
                         isLoadingMore = false;
                     }
                 }
@@ -210,30 +240,6 @@ public class TopicFragment extends BaseFragment implements SwipeRefreshLayout.On
                 }
             });
         }
-    }
-
-    private void queryNewArticlesByCategoryID(Integer categoryID) {
-        BmobQuery<Article> articlesBmobQuery = new BmobQuery<>();
-        articlesBmobQuery.order("createdAt");
-        articlesBmobQuery.addWhereEqualTo("cid", categoryID);
-        articlesBmobQuery.findObjects(getActivity(), new FindListener<Article>() {
-            @Override
-            public void onSuccess(List<Article> list) {
-                if (list != null && list.size() > 0) {
-                    mArticleList.clear();
-                    mArticleList.addAll(list);
-                    // notify data changed
-                    mArticleAdapter.notifyDataSetChanged();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-                Log.d(TAG, "query new Articles onSuccess" + mCid);
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.d(TAG, "query new Articles onError" + mCid);
-            }
-        });
     }
 
     @Override
